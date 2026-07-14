@@ -1,588 +1,734 @@
 <!DOCTYPE html>
-<html lang="zh-CN" xmlns="http://www.w3.org/1999/xhtml">
-
+<html lang="zh-CN">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <!-- 设置网页字符编码 -->
+    <meta charset="UTF-8">
+    <!-- 设置移动端显示方式 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 设置在新页面打开链接 -->
     <base target="_blank">
+    <!-- 设置网页标题 -->
     <title>洛卡导航</title>
+    <!-- 设置作者信息 -->
     <meta name="author" content="JohnnyOK">
+    <!-- 设置网页描述 -->
     <meta name="description" content="只是想做一个适合自己的导航网页">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <!-- 设置网页图标 -->
     <link rel="shortcut icon" href="img/favicon.ico">
-    <!-- <link rel="stylesheet" type="text/css" href="style/main.css"> -->
+    <!-- 全局设置：这里原来的外部CSS引用暂时保留注释状态，如果以后需要拆分CSS，可以恢复 -->
+    <!-- <link rel="stylesheet" href="style/main.css"> -->
     <style>
-        a {
-            display: inline-block;
-            text-decoration: none;
-            color: #0000e4;
-            margin: 4px 4px;
-            padding: 4px;
-            /* border: 1px dotted rgb(142, 142, 142); */
-            border-radius: 10%;
-        }
-
+        /* =============================== 全局基础设置 ================================ */
+        /* 统一盒模型：width和height包含padding以及border，可以避免布局计算混乱 */
         * {
-            font-weight: bold;
+            box-sizing: border-box;
         }
-
+        /* 页面主体样式 */
+        body {
+            /* 页面背景颜色（默认你最爱的深蓝） */
+            background-color: #0063B1;
+            /* 如果以后添加背景图片：图片居中显示 */
+            background-position: center;
+            /* 背景图片覆盖整个页面 */
+            background-size: cover;
+            /* 背景固定，不跟随滚动 */
+            background-attachment: fixed;
+            /* 默认文字颜色 */
+            color: #f3f1f1;
+            /* 文字阴影：第一层黑色阴影增加可读性，第二层轻微发光 */
+            text-shadow:
+                #000 1px 1px 8px,
+                #000 0 0 1px;
+            /* 关键：让背景颜色切换时也有 0.3 秒的平滑过渡，不刺眼 */
+            transition: background-color 0.3s ease;
+        }
+        /* =============================== 链接样式 ================================ */
+        /* 所有a标签基础样式 */
+        a {
+            /* 设置为行内块：可以控制宽高、padding */
+            display: inline-block;
+            /* 去掉默认下划线 */
+            text-decoration: none;
+            /* 文字颜色 */
+            color: #FFFFFF;
+            /* 外间距 */
+            margin: 4px;
+            /* 内间距 */
+            padding: 4px;
+            /* 圆角 */
+            border-radius: 8px;
+            /* 动画过渡：鼠标移动时更平滑 */
+            transition:
+                text-shadow .5s ease,
+                background-color .3s ease;
+        }
+        /* =============================== 表格导航区域 ================================ */
+        /* 表头宽度 */
         th {
             width: 100px;
+            /* 左对齐 */
             text-align: left;
         }
-
+        /* 单元格 */
         td {
-            border-top: #e2e2e2 solid 2px;
+            /* 每行顶部增加分隔线 */
+            border-top: 2px solid #81818191;
+            /* 内容居中 */
             text-align: center;
         }
-
-        #htmlcode1 {
-            opacity: 0;
-            width: 1px;
-            height: 1px;
-        }
-
-        .xunlei {
-            display: inline-block;
-        }
-
-        summary:hover,
-        a:hover {
-            background-color: #0000e4;
-            color: #fff;
-        }
-
-        sup {
-            font-size: medium;
-            font-style: italic;
-        }
-
+        /* =============================== 搜索框区域 ================================ */
+        /* 搜索表单 */
         .sousuo {
+            /* 行内显示 */
             display: inline-block;
-            margin: 10px 0px;
+            /* 上下间距 */
+            margin: 10px 0;
+        }
+        /* =============================== details折叠区域 ================================ */
+        /* 折叠菜单宽度 */
+        .xiala1 {
+            width: 300px;
+            margin: 4px 0;
+        }
+        /* =============================== 按钮样式 ================================ */
+        button {
+            /* 透明背景，保留你的玻璃风格 */
+            background-color: rgba(0,0,0,0);
+            /* 圆角 */
+            border-radius: 8px;
+            /* 字体大小 */
+            font-size: large;
+            /* 文字颜色 */
+            color: white;
+            /* 鼠标点击时显示手型 */
+            cursor: pointer;
+        }
+        /* =============================== 图片样式 ================================ */
+        /* 搜索区域图片 */
+        form img {
+            width: 80px;
+            /* 图片和文字底部对齐 */
+            vertical-align: text-bottom;
+        }
+        /* summary里的小图片 */
+        summary img {
+            width: 20px;
+            vertical-align: text-bottom;
+        }
+        /* 小字体 */
+        .world {
+            font-size: small;
+        }
+        /* 去除列表符号 */
+        li {
+            list-style: none;
+        }
+        /* =============================== 导航按钮 ================================ */
+        /* 导航分类块 */
+        .w1 {
+            display: inline-block;
+            min-width: 6%;
+            vertical-align: top;
+        }
+        /* 导航里面的链接 */
+        .w1 a {
+            /* 每个按钮独占一行 */
+            display: block;
+            margin: 4px 0;
+            height: 38px;
+            /* 水平居中 */
+            text-align: center;
+            /* 垂直居中 */
+            line-height: 38px;
+            padding: 0 4px;
+        }
+        /* =============================== 下标文字 ================================ */
+        sub {
+            font-style: italic;
+            color: rgba(224,224,224,.629);
+        }
+        /* =============================== 鼠标悬停效果 ================================ */
+        summary:hover,
+        a:hover,
+        .dropdown button:hover {
+            /* 半透明背景 */
+            background-color: #81818154;
+            /* 增强阴影 */
+            box-shadow: #00000096 2px 2px 3px 2px;
+            /* 发光文字效果 */
+            text-shadow:
+                white 0 0 1px,
+                white 0 0 5px;
+            color: white;
+            cursor: pointer;
+        }
+        /* =============================== 标题效果 ================================ */
+        h1:hover {
+            text-shadow:
+                white 0 0 5px,
+                #000 1px 1px 4px;
+            transition: text-shadow .5s ease;
+        }
+        /* =============================== 货币转换窗口 ================================ */
+        .huobi {
+            box-shadow: #00000096 2px 2px 3px 0;
+            width: 230px;
+            height: 313px;
+            color: #633434;
+        }
+        /* =============================== 点击/悬停式下拉菜单 ================================ */
+        /* 下拉菜单外层容器，必须包住：button、dropdown-content，这样JS才能控制 */
+        .dropdown {
+            /* 相对定位：给下面菜单定位参考 */
+            position: relative;
+            display: inline-block;
+        }
+        /* 下拉按钮 */
+        .dropdown button {
+            padding: 5px 10px;
+        }
+        /* 下拉内容盒子：默认状态下高度为0、透明度为0（隐藏） */
+        .dropdown-content {
+            display: block; /* 必须要设为block或flex，过渡动画才能生效 */
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0,0,0,.2);
+            z-index: 100;
+            /* 核心缓动动画设置：控制最大高度、透明度、可见性的过渡 */
+            max-height: 0;
+            opacity: 0;
+            visibility: hidden;
+            overflow: hidden;
+            transition: max-height 0.1s ease-in-out, opacity 0.1s ease-in-out, visibility 0.1s;
+        }
+        /* 下拉菜单里的链接 */
+        .dropdown-content a {
+            /* 每个链接占一行 */
+            display: block;
+            padding: 10px;
+            color: black;
+            margin: 0;
+        }
+        /* 下拉菜单鼠标经过 */
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+        /* 电脑端（支持鼠标悬停的设备）鼠标移入时优雅展开 */
+        @media (hover: hover) {
+            .dropdown:hover .dropdown-content {
+                max-height: 250px; /* 展开后的最大高度，足够装下5个链接 */
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+        /* 手机端（触摸屏设备）点击后通过 JS 切换 show 类来优雅展开 */
+        .dropdown-content.show {
+            max-height: 250px;
+            opacity: 1;
+            visibility: visible;
+        }
+        /* =============================== 独立换色控制面板 ================================ */
+        .theme-bar {
+            margin: 10px 0 15px 0; /* 上下外边距 */
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px; /* 文字和方块之间的间距 */
+        }
+        /* 换色容器 */
+        .theme-selector {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px; /* 颜色方块之间的间距 */
+        }
+        /* 单个颜色小方块 */
+        .theme-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px; /* 4px圆角呈现微圆角方块效果 */
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s;
+        }
+        /* 鼠标悬停在颜色块上时放大 */
+        .theme-dot:hover {
+            transform: scale(1.3);
+            border-color: #fff;
         }
     </style>
 </head>
-
 <body>
-    <h1>洛卡楽器店 の 導航<sup>-⏩极速版1.01---<a href="0.html">回旧版</a><a href="wxp/index.html">五线谱</a></sup></h1>
-    <!-- 加日期时间 -->
+    <!-- =============================== 页面标题 ================================ -->
+    <h1>
+        洛卡楽器店 の 導航
+        <!-- sup：让版本号和附加链接显示为上标 -->
+        <sup>
+            -⏩极速版v2.0--2026.7.15-
+            <!-- 返回旧版本 -->
+            <a href="0.html">回旧版</a>
+            <!-- 五线谱页面 -->
+            <a href="wxp/index.html">五线谱</a>
+        </sup>
+    </h1>
+
+    <!-- =============================== 独立换色控制栏 ================================ -->
+    <div class="theme-bar">
+        <span>🎨 换肤：</span>
+        <span class="theme-selector">
+            <span class="theme-dot" style="background-color: #0063B1;" title="经典深蓝" onclick="changeBgColor('#0063B1')"></span>
+            <span class="theme-dot" style="background-color: #2F3640;" title="优雅暗黑" onclick="changeBgColor('#2F3640')"></span>
+            <span class="theme-dot" style="background-color: #1B3F2B;" title="森林深绿" onclick="changeBgColor('#1B3F2B')"></span>
+            <span class="theme-dot" style="background-color: #5D2E2E;" title="红褐典雅" onclick="changeBgColor('#5D2E2E')"></span>
+            <span class="theme-dot" style="background-color: #121212;" title="极简纯黑" onclick="changeBgColor('#121212')"></span>
+        </span>
+    </div>
+
+    <!-- =============================== 世界时间显示 ================================ -->
     <div class="world">
-        <details title="点它会显示斯洛伐克与加拿大时间">
+        <details title="点它会显示斯洛伐克与中国时间">
             <summary>
                 <span id="aa">loading</span>
                 <script>
-                    setInterval("aa.innerHTML=new Date().toLocaleString()+' 周'+'日一二三四五六'.charAt(new Date().getDay());", 1000);
+                    /* 显示当前时间，保留原功能，只是改成标准写法 */
+                    setInterval(function(){
+                        document.getElementById("aa").innerHTML = new Date().toLocaleString() + " 周" + "日一二三四五六".charAt(new Date().getDay());
+                    }, 1000);
                 </script>
                 <u><strong>world时间</strong></u>
-                <strong><a href="https://www.baidu.com/s?wd=%E6%97%A5%E5%8E%86">日历</a></strong>
+                <a href="https://www.baidu.com/s?wd=%E6%97%A5%E5%8E%86"><strong>日历</strong></a>
             </summary>
             <div>
                 <br>
-                <a href="https://24timezones.com/zh_time/slovakia_bratislava_clock.php" style="text-decoration: none"
-                    class="clock24"
-                    id="tz24-1650904477-cc15202-eyJob3VydHlwZSI6IjI0Iiwic2hvd2RhdGUiOiIxIiwic2hvd3NlY29uZHMiOiIxIiwic2hvd3RpbWV6b25lIjoiMCIsInR5cGUiOiJkIiwibGFuZyI6InpoIn0="
-                    title="布拉迪斯拉发 实际时间" target="_blank" rel="nofollow">sk时间</a>
-                <script type="text/javascript" src="https://w.24timezones.com/l.js" async></script>
+                <!-- 斯洛伐克时间 -->
+                <a href="https://24timezones.com/zh_time/slovakia_bratislava_clock.php" class="clock24" title="布拉提斯拉发 实际时间" target="_blank" rel="nofollow">sk时间</a>
+                <script src="https://w.24timezones.com/l.js" async></script>
             </div>
             <div>
-                <a href="//24timezones.com/%E5%8C%97%E4%BA%AC/%E6%97%B6%E9%97%B4" style="text-decoration: none"
-                    class="clock24"
-                    id="tz24-1661370745-c133-eyJob3VydHlwZSI6IjI0Iiwic2hvd2RhdGUiOiIxIiwic2hvd3NlY29uZHMiOiIxIiwic2hvd3RpbWV6b25lIjoiMCIsInR5cGUiOiJkIiwibGFuZyI6InpoIn0="
-                    title="时间 北京" target="_blank" rel="nofollow">cn时间</a>
-                <script type="text/javascript" src="//w.24timezones.com/l.js" async></script>
+                <!-- 中国时间 -->
+                <a href="//24timezones.com/%E5%8C%97%E4%BA%AC/%E6%97%B6%E9%97%B4" class="clock24" title="时间 北京" target="_blank" rel="nofollow">cn时间</a>
+                <script src="//w.24timezones.com/l.js" async></script>
             </div>
         </details>
     </div>
+
+    <!-- =============================== 顶部快捷链接 ================================ -->
     <a href="https://drive.google.com/drive/folders/1dx4NcRGceidUULgYlpM0yRQKFQ1a1NRN?usp=sharing">SK语-音频</a>
     <a href="skA1/index.html">SK语-点读笔记</a>
     <a href="huiguo.htm">SK-出国回国准备（2022.8.26版本2.2）</a>
     <br>
-    <!--百度=======================-->
-    <form class="sousuo" action="https://www.baidu.com/s"><a href="https://www.baidu.com">🟢百度</a>
-        <input name="wd" type="text" placeholder="空搜 可直接进主页"><button type="submit">🔍</button>
+
+    <!-- =============================== 百度搜索 ================================ -->
+    <form class="sousuo" action="https://www.baidu.com/s">
+        <a href="https://www.baidu.com">🟢百度</a>
+        <input name="wd" type="text" placeholder="空搜 可直接进主页">
+        <button type="submit">🔍</button>
     </form>
 
-    <!--Google=======================-->
-    <form class="sousuo" action="https://www.google.com/search"><a href="https://www.google.com">🎯谷歌</a>
-        <input name="q" type="text"><button type="submit">🔍</button>
-    </form>
-    <br>
-    <!--Bing=======================-->
-    <form class="sousuo" action="https://cn.bing.com/search"><a href="https://www.bing.com">🔶必应</a>
-        <input name="q" type="text"><button type="submit">🔍</button>
-    </form>
-
-    <!--B站=======================-->
-    <form class="sousuo" action="https://search.bilibili.com/all"><a href="https://www.bilibili.com">🔵B站</a>
-        <input name="keyword" type="text"><button type="submit">🔍</button>
+    <!-- =============================== Google搜索 ================================ -->
+    <form class="sousuo" action="https://www.google.com/search">
+        <a href="https://www.google.com">🎯谷歌</a>
+        <input name="q" type="text">
+        <button type="submit">🔍</button>
     </form>
     <br>
-    <!--Youtube=======================-->
-    <form class="sousuo" action="https://www.youtube.com/results"><a href="https://www.youtube.com">🟥YTB</a>
-        <input name="search_query" type="text"><button type="submit">🔍</button>
+
+    <!-- =============================== Bing搜索 ================================ -->
+    <form class="sousuo" action="https://cn.bing.com/search">
+        <a href="https://www.bing.com">🔶必应</a>
+        <input name="q" type="text">
+        <button type="submit">🔍</button>
+    </form>
+
+    <!-- =============================== B站搜索 ================================ -->
+    <form class="sousuo" action="https://search.bilibili.com/all">
+        <a href="https://www.bilibili.com">🔵B站</a>
+        <input name="keyword" type="text">
+        <button type="submit">🔍</button>
     </form>
     <br>
-    <!--导航按钮=======================-->
 
+    <!-- =============================== Youtube搜索 ================================ -->
+    <form class="sousuo" action="https://www.youtube.com/results">
+        <a href="https://www.youtube.com">🟥YTB</a>
+        <input name="search_query" type="text">
+        <button type="submit">🔍</button>
+    </form>
+    <br>
 
-
+    <!-- =============================== 主导航表格 ================================ -->
     <table>
         <tr>
-            <th>🏡常用主页</th>
-            <td><a title="斯洛伐克日历" href="https://calendar.zoznam.sk/">sk日历</a>
-                <a title="公农历" href="https://www.baidu.com/s?wd=%E6%97%A5%E5%8E%86">cn日历</a>
-                <a title="汇率换算" href="https://m.baidu.com/s?word=%E6%B1%87%E7%8E%87">
-                    汇率
-                </a>
-                <a title="闲鱼官网" href="https://www.goofish.com/">
-                    闲鱼
-                </a>
-                <a title="ChatGPT" href="https://chatgpt.com/">
-                    GPT
-                </a>
-                <a title="BT磁力链搜索下载" href="https://tellme.pw/btsow">
-                    磁力链搜索
-                </a>
-                <a title="国内测网速" href="https://www.speedtest.cn/">
-                    国内测速
-                </a>
-                <a title="国内测网速2" href="https://ipw.cn/">
-                    IPv6检测
-                </a>
-                <a title="国际测网速" href="https://www.speedtest.net">
-                    国际测速
-                </a>
-                <a title="IP地址查询" href="https://tool.lu/ip">
-                    IP地址
-                </a>
-                <a title="在线转换N多格式" href="https://convertio.co/zh/">
-                    在线转格式
-                </a>
+            <th>🏡常用主页1</th>
+            <td>
+                <a href="https://calendar.zoznam.sk/" title="斯洛伐克日历">sk日历</a>
+                <a href="https://www.baidu.com/s?wd=%E6%97%A5%E5%8E%86">cn日历</a>
+                <a href="https://m.baidu.com/s?word=%E6%B1%87%E7%8E%87">汇率</a>
+                <a href="https://www.goofish.com/">闲鱼</a>
+                <a href="https://chatgpt.com/">GPT</a>
+                <a href="https://tellme.pw/btsow">磁力链搜索</a>
+
+                <!-- 测网速下拉菜单 -->
+                <div class="dropdown">
+                    <button onclick="toggleDropdown(this)">测网速</button>
+                    <div class="dropdown-content">
+                        <a href="https://www.speedtest.cn/">国内测速1</a>
+                        <a href="https://wangsuceshi.bmcx.com/">测速2</a>
+                        <a href="https://ipw.cn/">IPv6检测</a>
+                        <a href="https://www.speedtest.net">国际测速</a>
+                    </div>
+                </div>
+                <a href="https://tool.lu/ip">IP地址</a>
+                <a href="https://convertio.co/zh/">在线转格式</a>
             </td>
         </tr>
-
+        <tr>
+            <th>🏡常用主页2</th>
+            <td>
+                <!-- AI下拉菜单 -->
+                <div class="dropdown">
+                    <button onclick="toggleDropdown(this)">✨ AI</button>
+                    <div class="dropdown-content">
+                        <a title="豆包" href="https://www.doubao.com/">豆包</a>
+                        <a title="千问" href="https://www.qianwen.com/">千问</a>
+                        <a title="Copilot" href="https://copilot.microsoft.com/">Copilot</a>
+                        <a title="Gemini" href="https://gemini.google.com/">Gemini</a>
+                        <a title="ChatGPT" href="https://chatgpt.com/">GPT</a>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <!-- =============================== Cela收藏 ================================ -->
         <tr>
             <th>🌈Cela</th>
-            <td><a href="https://www.pinterest.com/">
-                    Pinterest
-                </a>
-                <a href="https://www.apple.com.cn/icloud/">
-                    icloud-cn
-                </a>
-                <a href="https://space.bilibili.com/28983221/">
-                    雪拉同B站
-                </a>
-                <a href="https://imslp.org/">
-                    国际乐谱
-                </a>
-                <a href="https://www.lizhiweike.com/">
-                    荔枝微
-                </a>
-                <a href="https://www.X.com/">
-                    X
-                </a>
-                <a href="https://www.instagram.com/">
-                    ins
-                </a>
-
+            <td>
+                <a href="https://www.pinterest.com/">Pinterest</a>
+                <a href="https://www.apple.com.cn/icloud/">icloud-cn</a>
+                <a href="https://space.bilibili.com/28983221/">雪拉同B站</a>
+                <a href="https://imslp.org/">国际乐谱</a>
+                <a href="https://www.lizhiweike.com/">荔枝微</a>
+                <a href="https://www.X.com/">X</a>
+                <a href="https://www.instagram.com/">ins</a>
             </td>
         </tr>
+        <!-- =============================== 邮箱 ================================ -->
         <tr>
             <th>📬邮箱</th>
-            <td><a href="https://outlook.live.com/mail">
-                    微软Mail
-                </a>
-                <a href="https://mail.163.com/">
-                    网易Mail
-                </a>
-                <a href="https://mail.google.com/">
-                    谷歌Mail
-                </a>
+            <td>
+                <a href="https://outlook.live.com/mail">微软Mail</a>
+                <a href="https://mail.163.com/">网易Mail</a>
+                <a href="https://mail.google.com/">谷歌Mail</a>
             </td>
         </tr>
+        <!-- =============================== 翻译工具 ================================ -->
         <tr>
             <th>🔠翻译</th>
             <td>
-                <a title="国外谷歌翻译" href="https://translate.google.com">
-                    谷译
-                </a>
-                <a title="微软翻译" href="https://www.bing.com/translator">
-                    Bing译
-                </a>
-                <a title="百度翻译" href="https://fanyi.baidu.com">
-                    度译
-                </a>
-                <a title="简繁互译" href="https://www.bing.com/translator?ref=TThis&text=&from=zh-Hans&to=zh-Hant">
-                    简繁
-                </a>
-
+                <a title="国外谷歌翻译" href="https://translate.google.com">谷译</a>
+                <a title="微软翻译" href="https://www.bing.com/translator">Bing译</a>
+                <a title="百度翻译" href="https://fanyi.baidu.com">度译</a>
+                <a title="简繁互译" href="https://www.bing.com/translator?ref=TThis&text=&from=zh-Hans&to=zh-Hant">简繁</a>
             </td>
         </tr>
+        <!-- =============================== 科技公司 ================================ -->
         <tr>
             <th>🌐科技公司</th>
-            <td> <a title="微软官网" href="https://www.microsoft.com/">
-                    Microsoft
-                </a>
-                <a title="英特尔官网" href="https://www.intel.com/">
-                    Intel
-                </a>
-                <a title="三星各国官网" href="https://www.samsung.com/cn/function/ipredirection/ipredirectionLocalList/">三星
-                </a>
-                <a title="苹果官网" href="https://www.apple.com/">
-                    Apple
-                </a>
-                <a title="AMD Yes!" href="https://www.amd.com/">
-                    AMD
-                </a>
-                <a title="英伟达官网" href="https://www.nvidia.cn/">
-                    Nvidia
-                </a>
-                <a title="谷歌商店" href="https://store.google.com/">
-                    谷歌商店
-                </a>
+            <td>
+                <a title="微软官网" href="https://www.microsoft.com/">Microsoft</a>
+                <a title="英特尔官网" href="https://www.intel.com/">Intel</a>
+                <a title="三星各国官网" href="https://www.samsung.com/cn/function/ipredirection/ipredirectionLocalList/">三星</a>
+                <a title="苹果官网" href="https://www.apple.com/">Apple</a>
+                <a title="AMD Yes!" href="https://www.amd.com/">AMD</a>
+                <a title="英伟达官网" href="https://www.nvidia.cn/">Nvidia</a>
+                <a title="谷歌商店" href="https://store.google.com/">谷歌商店</a>
             </td>
         </tr>
+        <!-- =============================== 乐器品牌 ================================ -->
         <tr>
-            <th>🌐科技公司</th>
-            <td> <a title="罗兰主站" href="https://www.roland.com/">
-                    Roland
-                </a>
-                <a title="罗兰中国" href="https://www.roland-china.com/">
-                    -CN
-                </a>
-                <a title="BOSS" href="https://www.boss.info/">Boss
-                </a>
-                <a title="BOSS中国" href="https://boss.roland-china.com/">
-                    -CN
-                </a>
-                <a title="雅马哈日本" href="https://jp.yamaha.com/">
-                    Yamaha-jp
-                </a>
-                <a title="雅马哈中国" href="https://www.yamaha.com.cn/">
-                    -CN
-                </a>
-                <a title="NUX" href="https://cn.nuxaudio.com/">
-                    NUX
-                </a>
-                <a title="JOYO" href="https://www.joyochina.cn/">
-                    JOYO
-                </a>
+            <th>🎸乐器品牌</th>
+            <td>
+                <a title="罗兰主站" href="https://www.roland.com/">Roland</a>
+                <a title="罗兰中国" href="https://www.roland-china.com/">-CN</a>
+                <a title="BOSS" href="https://www.boss.info/">Boss</a>
+                <a title="BOSS中国" href="https://boss.roland-china.com/">-CN</a>
+                <a title="雅马哈日本" href="https://jp.yamaha.com/">Yamaha-jp</a>
+                <a title="雅马哈中国" href="https://www.yamaha.com.cn/">-CN</a>
+                <a title="小天使" href="https://cn.nuxaudio.com/">NUX</a>
+                <a title="JOYO" href="https://www.joyochina.cn/">JOYO</a>
             </td>
         </tr>
+        <!-- =============================== 识图搜索 ================================ -->
         <tr>
             <th>📷识图搜索</th>
-            <td><a title="百度图片出处搜索" href="https://graph.baidu.com/pcpage/index?tpl_from=pc">
-                    百度识图
-                </a>
-                <a title="谷歌图片出处搜索" href="https://www.google.com/imghp?hl=zh-CN&amp;ogbl">
-                    谷歌识图
-                </a>
-                <a title="微软图片出处搜索" href="https://cn.bing.com/visualsearch">
-                    微软识图
-                </a>
-                <a title="强大的图片出处搜索" href="https://tineye.com/">
-                    Tineye
-                </a>
+            <td>
+                <a title="百度图片出处搜索" href="https://graph.baidu.com/pcpage/index?tpl_from=pc">百度识图</a>
+                <a title="谷歌图片出处搜索" href="https://www.google.com/imghp?hl=zh-CN&amp;ogbl">谷歌识图</a>
+                <a title="微软图片出处搜索" href="https://cn.bing.com/visualsearch">微软识图</a>
+                <a title="强大的图片出处搜索" href="https://tineye.com/">Tineye</a>
             </td>
         </tr>
+        <!-- =============================== 游戏 ================================ -->
         <tr>
             <th>🎮游戏</th>
-            <td><a title="红警二三下载" href="http://www.uc129.com/">
-                    红警
-                </a>
-                <a title="在线游戏机1" href="https://www.yikm.net/">
-                    小霸王1
-                </a>
-                <a title="在线游戏机2" href="https://www.return8090.com/">
-                    小霸王2
-                </a>
-                <a title="FC智力游戏下载神站" href="http://dyzg.ysepan.com/">
-                    FC下载
-                </a>
-
+            <td>
+                <a title="在线CS" href="https://webcs.xyz/">在线CS</a>
+                <a title="红警二三下载" href="http://www.uc129.com/">红警</a>
+                <a title="在线游戏机1" href="https://www.yikm.net/">小霸王1</a>
+                <a title="在线游戏机2" href="https://www.return8090.com/">小霸王2</a>
+                <a title="FC游戏下载" href="http://dyzg.ysepan.com/">FC下载</a>
+                <!-- 暴雪美台国服官网下拉菜单 -->
+                <div class="dropdown">
+                    <button onclick="toggleDropdown(this)">暴雪魔兽</button>
+                    <div class="dropdown-content">
+                        <a title="美服魔兽" href="https://worldofwarcraft.com/en-us/">魔兽us</a>
+                        <a title="美服暴雪" href="https://www.blizzard.com/en-us">暴雪us</a>
+                        <a title="台服魔兽" href="https://worldofwarcraft.com/zh-tw/">魔兽tw</a>
+                        <a title="台服暴雪" href="https://www.blizzard.com/zh-tw">暴雪tw</a>
+                        <a title="国服暴雪" href="https://cn.blizzard.com/">暴雪cn</a>
+                    </div>
+                </div>
             </td>
         </tr>
+        <!-- =============================== 其它工具 ================================ -->
         <tr>
             <th>🔻其它</th>
-            <td> <a title="谷歌浏览器App商店" href="https://chrome.google.com/webstore/category/extensions?hl=zh">
-                    Chrome商店
-                </a>
-                <a title="强大的驱动下载站" href="https://www.station-drivers.com/">
-                    驱动下载
-                </a>
-                <a title="谷歌官方安卓App商店" href="https://play.google.com">
-                    Google Play
-                </a>
-                <a title="微软系统与应用原文件下载" href="https://msdn.itellyou.cn/">
-                    MSDN原版下载
-                </a>
-                <a title="从谷歌商店直接下载安卓应用安装包" href="https://apkpure.com/cn/">
-                    安卓apk下载
-                </a>
-                <a title="收费软件的替代方案查询" href="https://alternativeto.net/">
-                    替代
-                </a>
-                <a title="一些工具" href="http://tools.liumingye.cn/">
-                    工具箱
-                </a>
-                <a title="原‘驱动之家’" href="https://www.mydrivers.com/">
-                    快科技
-                </a>
+            <td>
+                <a title="谷歌浏览器App商店" href="https://chrome.google.com/webstore/category/extensions?hl=zh">Chrome商店</a>
+                <a title="驱动下载站" href="https://www.station-drivers.com/">驱动下载</a>
+                <a title="谷歌官方安卓商店" href="https://play.google.com">Google Play</a>
+                <a title="微软系统原文件下载" href="https://msdn.itellyou.cn/">MSDN原版下载</a>
+                <a title="安卓apk下载" href="https://apkpure.com/cn/">安卓apk下载</a>
+                <a title="软件替代方案查询" href="https://alternativeto.net/">替代</a>
+                <a title="工具箱" href="http://tools.liumingye.cn/">工具箱</a>
+                <a title="驱动之家" href="https://www.mydrivers.com/">快科技</a>
             </td>
         </tr>
+        <!-- =============================== 安卓刷机 ================================ -->
         <tr>
             <th>🔻其它</th>
-            <td> <a title="LOS刷机" href="https://lineageos.org/">
-                    LineageOS
-                </a>
-                <a title="crDroid刷机" href="https://sourceforge.net/projects/crdroid/">
-                    crDroid
-                </a>
-                <a title="Carbon刷机" href="https://carbonrom.org/">
-                    Carbon
-                </a>
-
+            <td>
+                <a title="LineageOS" href="https://lineageos.org/">LineageOS</a>
+                <a title="crDroid" href="https://sourceforge.net/projects/crdroid/">crDroid</a>
+                <a title="Carbon" href="https://carbonrom.org/">Carbon</a>
             </td>
         </tr>
-
+        <!-- =============================== 看电影 ================================ -->
         <tr>
             <th>💿看电影</th>
-            <td> <a title="泥巴影院" href="https://www.nbyy.cc">
-                    泥巴1
-                </a>
-                       <a title="泥巴影院" href="https://www.nivod.cc/">
-                    泥巴2
-                </a>
-                <a title="多瑙影视" href="https://www.duonaovod.com/">
-                    多瑙
-                </a>
-                <a title="唐人街影院" href="https://www.trjvod.com">
-                    唐人街
-                </a>
-                <a title="优视频" href="https://www.uvod.tv/">
-                    优视频
-                </a>
-                <a title="欧乐影院" href="https://www.olevod.com/">
-                    欧乐
-                </a>
-                <a title="爱壹帆" href="https://www.iyf.tv/">
-                    爱壹帆
-                </a>
+            <td>
+                <a title="泥巴影院" href="https://www.nbyy.cc">泥巴1</a>
+                <a title="泥巴影院" href="https://www.nivod.cc/">泥巴2</a>
+                <a title="多瑙影视" href="https://www.duonaovod.com/">多瑙</a>
+                <a title="唐人街影院" href="https://www.trjvod.com">唐人街</a>
+                <a title="优视频" href="https://www.uvod.tv/">优视频</a>
+                <a title="欧乐影院" href="https://www.olevod.com/">欧乐</a>
+                <a title="爱壹帆" href="https://www.iyf.tv/">爱壹帆</a>
             </td>
         </tr>
+        <!-- =============================== 装机必备 ================================ -->
         <tr>
             <th>❤️装机必备</th>
-            <td><a title="全网最绿色的解压缩工具" href="https://www.7-zip.org/">7z</a>
-                <a title="全网听、下歌神器" href="https://github.com/lyswhut/lx-music-desktop/">
-                    洛雪音乐
-                </a>
-                <a title="洛雪音乐下载发布站点与密码" href="https://www.lanzoui.com/b0bf2cfa/">
-                    密码glqw
-                </a>
-                <a title="全网听歌神器" href="https://listen1.github.io/listen1/">
-                    Listen1听音乐
-                </a>
-                <a title="微软office安装神器" href="https://otp.landian.vip/zh-cn/">
-                    Office安装
-                </a>
-                <a title="买家与卖家" href="https://wangwang.taobao.com/">
-                    阿里旺旺/千牛
-                </a>
-                <a title="我也不想用它但没办法" href="https://www.xunlei.com/">
-                    迅雷下载
-                </a>
-                <a title="你懂的" href="https://github.com/massgravel/Microsoft-Activation-Scripts/releases/tag/1.5">
-                    win/office激活
-                </a>
+            <td>
+                <a title="7zip" href="https://www.7-zip.org/">7z</a>
+                <a title="洛雪音乐" href="https://github.com/lyswhut/lx-music-desktop/">洛雪音乐</a>
+                <a title="洛雪音乐发布" href="https://www.lanzoui.com/b0bf2cfa/">密码glqw</a>
+                <a title="Listen1" href="https://listen1.github.io/listen1/">Listen1听音乐</a>
+                <a title="Office安装" href="https://otp.landian.vip/zh-cn/">Office安装</a>
+                <a title="淘宝旺旺" href="https://wangwang.taobao.com/">阿里旺旺/千牛</a>
+                <a title="迅雷" href="https://www.xunlei.com/">迅雷下载</a>
+                <a title="激活脚本" href="https://github.com/massgravel/Microsoft-Activation-Scripts/releases/tag/1.5">win/office激活</a>
             </td>
         </tr>
+        <!-- =============================== 在线工具 ================================ -->
         <tr>
             <th>🔧工具收录</th>
-            <td><a title="在线PS" href="https://ps.gaoding.com/">
-                    在线PhotoShop
-                </a>
-                <a title="备用" href="https://www.aconvert.com/cn/">
-                    在线转格式-备用
-                </a>
-                <a title="洛雪音乐下载发布站点与密码" href="https://cse.google.com/cse?cx=006422944775554126616:gbrsbrjbfug">
-                    驴搜
-                </a>
-                <a title="动漫图片搜索动漫出处" href="https://trace.moe/">
-                    漫图搜
-                </a>
-                <a title="最全CPU排行" href="https://www.cpubenchmark.net/high_end_cpus.html">
-                    CPU排行
-                </a>
-                <a title="最全GPU排行" href="https://www.videocardbenchmark.net/high_end_gpus.html">
-                    GPU排行
-                </a>
-                <a title="屏幕比例计算器" href="https://www.lddgo.net/math/proportional-calculator">
-                    屏幕比例计算器
-                </a>
+            <td>
+                <a title="在线PS" href="https://ps.gaoding.com/">在线PhotoShop</a>
+                <a title="格式转换备用" href="https://www.aconvert.com/cn/">在线转格式-备用</a>
+                <a title="搜索工具" href="https://cse.google.com/cse?cx=006422944775554126616:gbrsbrjbfug">驴搜</a>
+                <a title="动漫出处搜索" href="https://trace.moe/">漫图搜</a>
+                <a title="CPU排行" href="https://www.cpubenchmark.net/high_end_cpus.html">CPU排行</a>
+                <a title="GPU排行" href="https://www.videocardbenchmark.net/high_end_gpus.html">GPU排行</a>
+                <a title="屏幕比例计算" href="https://www.lddgo.net/math/proportional-calculator">屏幕比例计算器</a>
             </td>
         </tr>
-
     </table>
 
-
-
-
-    <!--下拉=======================-->
-
-    <!--其它=======================-->
+    <!-- =============================== 折叠备忘区域 ================================ -->
     <br>
-
     <details>
         <summary class="xiala1">🔧装机必备</summary>
-
-        <li><a href="https://t1.daumcdn.net/potplayer/PotPlayer/Version/Latest/PotPlayerSetup64.exe">-
-                PotPlayer</a><sub>--复制链接后迅雷下载</sub>
-            <form class="xunlei" role="form" action="" method="post">
-                <input type="text" id="htmlcode1"
-                    value='https://t1.daumcdn.net/potplayer/PotPlayer/Version/Latest/PotPlayerSetup64.exe'>
-                <input name="button" type="button" onclick="htmlcode1.select();document.execCommand(&quot;Copy&quot;)"
-                    value="复制">
+        <!-- PotPlayer -->
+        <li>
+            <a href="https://t1.daumcdn.net/potplayer/PotPlayer/Version/Latest/PotPlayerSetup64.exe">- PotPlayer</a>
+            <sub>--复制链接后迅雷下载</sub>
+            <form>
+                <input type="text" id="code1" value="https://t1.daumcdn.net/potplayer/PotPlayer/Version/Latest/PotPlayerSetup64.exe">
+                <button type="button" onclick="copyText('code1')">复制</button>
             </form>
         </li>
-
-        <li><a href="http://get.daum.net/PotPlayer/Codec/OpenCodecSetup64.exe">-
-                PotPlayer额外编码器</a><sub>--复制链接后迅雷下载</sub>
-            <form class="xunlei" role="form" action="" method="post">
-                <input type="text" id="htmlcode1" value='http://get.daum.net/PotPlayer/Codec/OpenCodecSetup64.exe'>
-                <input name="button" type="button" onclick="htmlcode1.select();document.execCommand(&quot;Copy&quot;)"
-                    value="复制">
+        <!-- PotPlayer编码器 -->
+        <li>
+            <a href="http://get.daum.net/PotPlayer/Codec/OpenCodecSetup64.exe">- PotPlayer额外编码器</a>
+            <sub>--复制链接后迅雷下载</sub>
+            <form>
+                <input type="text" id="code2" value="http://get.daum.net/PotPlayer/Codec/OpenCodecSetup64.exe">
+                <button type="button" onclick="copyText('code2')">复制</button>
             </form>
         </li>
-        <li><a title="你懂的" href="https://github.com/massgravel/Microsoft-Activation-Scripts/releases/tag/1.5">-
-                win、office激活</a></li>
+        <li>
+            <a title="你懂的" href="https://github.com/massgravel/Microsoft-Activation-Scripts/releases/tag/1.5">- win、office激活</a>
+        </li>
     </details>
 
+    <!-- =============================== 其他备忘 ================================ -->
     <details>
         <summary class="xiala1">🔧其他备忘</summary>
-        <li><a href="app/clash2.5.12.apk">① Clash</a> &
-            <a
-                href="https://microsoftedge.microsoft.com/addons/detail/%E8%B0%B7%E6%AD%8C%E4%B8%8A%E7%BD%91%E5%8A%A9%E6%89%8B-vip%E7%89%88/eoboojokdmamahfilfmamjjkcmkmddgk?hl=zh-CN">②
-                Ghelp-EDGE</a>
+        <li>
+            <a href="app/clash2.5.12.apk">① Clash</a>
+            &amp;
+            <a href="https://microsoftedge.microsoft.com/addons/detail/%E8%B0%B7%E6%AD%8C%E4%B8%8A%E7%BD%91%E5%8A%A9%E6%89%8B-vip%E7%89%88/eoboojokdmamahfilfmamjjkcmkmddgk?hl=zh-CN">② Ghelp-EDGE</a>
         </li>
         <details>
             <summary class="xiala1">个人备忘</summary>
-
             <table>
+                
+                <!-- =============================== 视频搜索 ================================ -->
                 <tr>
-                    <th>🔠翻译</th>
-                    <td> <a title="国内谷歌翻译" href="https://translate.google.com.hk/?sl=auto&tl=zh-CN&op=translate">
-                            谷译cn
-                        </a>
-                        <a title="国外谷歌翻译" href="https://translate.google.com">
-                            谷译int
-                        </a>
-                        <a title="微软翻译" href="https://www.bing.com/translator">
-                            Bing译
-                        </a>
-                        <a title="百度翻译" href="https://fanyi.baidu.com">
-                            度译
-                        </a>
-                        <a title="简繁互译" href="https://translate.google.com.hk/?sl=zh-CN&tl=zh-TW&op=translate">
-                            简繁
-                        </a>
+                    <td>
 
+                        <!--傻傻=======================-->
+                            <form class="sousuo" action="https://shasha.hair/node/search?title="><a href="https://shasha.hair">🟢傻傻</a>
+                                     <input name="title" type="text" placeholder="空搜 可直接进主页"><button type="submit">🔍</button>
+                            </form>
+                          <br>
+                        <!--多瑙=======================-->
+                            <form class="sousuo" action="https://www.duonaovod.com/index.php/vod/search.html?"><a href="https://www.duonaovod.com">🟢多瑙</a>
+                                     <input name="wd" type="text" placeholder=""><button type="submit">🔍</button>
+                            </form>
+                          <br>
+                        <!--唐人=======================-->
+                            <form class="sousuo" action="https://www.trjvod.com/index.php/vod/search.html?"><a href="https://www.trjvod.com">🟢唐人</a>
+                                     <input name="wd" type="text" placeholder=""><button type="submit">🔍</button>
+                            </form>
                     </td>
                 </tr>
-    <br>
-    <!--百度=======================-->
-    <form class="sousuo" action="https://shasha.hair/node/search?title="><a href="https://shasha.hair">🟢傻傻</a>
-        <input name="title" type="text" placeholder="空搜 可直接进主页"><button type="submit">🔍</button>
-    </form>
-    <form class="sousuo" action="https://www.duonaovod.com/index.php/vod/search.html?"><a href="https://www.duonaovod.com">🟢多瑙</a>
-        <input name="wd" type="text" placeholder=""><button type="submit">🔍</button>
-    </form>
-    <br>
-    <!--百度=======================-->
-    <form class="sousuo" action="https://www.trjvod.com/index.php/vod/search.html?"><a href="https://www.trjvod.com">🟢唐人</a>
-        <input name="wd" type="text" placeholder=""><button type="submit">🔍</button>
-    </form>
+                <!-- =============================== 游戏账号备忘 ================================ -->
                 <tr>
-                    <td><a title="吞食天地2隐藏物品" href="https://www.9game.cn/news/5725716.html">
-                            吞2隐
-                        </a>
-                        <a title="美服魔兽" href="https://worldofwarcraft.com/en-us/">
-                            魔兽us
-                        </a>
-                        <a title="美服暴雪" href="https://www.blizzard.com/en-us">
-                            暴雪us
-                        </a>
-                        <a title="台服魔兽" href="https://worldofwarcraft.com/zh-tw/">
-                            魔兽tw
-                        </a>
-                        <a title="台服暴雪" href="https://www.blizzard.com/zh-tw">
-                            暴雪tw
-                        </a>
-                        <a title="国服暴雪" href="https://cn.blizzard.com/">
-                            暴雪cn
-                        </a>
-                        </a>
-                        <a title="文件管理器" href="https://johnnyokok.github.io/app/wjglq.apk">
-                            安卓文件管理器
-                        </a>
+                    <td>
+                        <a title="吞食天地2隐藏物品" href="https://www.9game.cn/news/5725716.html">吞2隐</a>
+
+
+
+
+                        <a title="安卓文件管理器" href="https://johnnyokok.github.io/app/wjglq.apk">安卓文件管理器</a>
                     </td>
                 </tr>
             </table>
-            <li><a href="http://192.168.1.1/">吉比特光猫h2-2</a></li>
+            <br>
+            <!-- =============================== 光猫信息备忘 ================================ -->
+            <li>
+                <a href="http://192.168.1.1/">吉比特光猫h2-2</a>
+            </li>
             超级管理员：
-            <form role="form" action="" method="post">
-                <input type="text" id="htmlcode" value='CMCCAdmin'>
-                <input name="button" type="button" onclick="htmlcode.select();document.execCommand(&quot;Copy&quot;)"
-                    value="复制">
+            <form>
+                <input type="text" id="code3" value="CMCCAdmin">
+                <button type="button" onclick="copyText('code3')">复制</button>
             </form>
-
-            <form role="form" action="" method="post">
-                <input type="text" id="htmlcode" value='aDm8H%MdA'>
-                <input name="button" type="button" onclick="htmlcode.select();document.execCommand(&quot;Copy&quot;)"
-                    value="复制">
+            <form>
+                <input type="text" id="code4" value="aDm8H%MdA">
+                <button type="button" onclick="copyText('code4')">复制</button>
             </form>
             一般管理员：
-            <form role="form" action="" method="post">
-                <input type="text" id="htmlcode" value='user'>
-                <input name="button" type="button" onclick="htmlcode.select();document.execCommand(&quot;Copy&quot;)"
-                    value="复制">
+            <form>
+                <input type="text" id="code5" value="user">
+                <button type="button" onclick="copyText('code5')">复制</button>
             </form>
-
-            <form role="form" action="" method="post">
-                <input type="text" id="htmlcode" value='nsvw659s'>
-                <input name="button" type="button" onclick="htmlcode.select();document.execCommand(&quot;Copy&quot;)"
-                    value="复制">
+            <form>
+                <input type="text" id="code6" value="nsvw659s">
+                <button type="button" onclick="copyText('code6')">复制</button>
             </form>
         </details>
-
     </details>
+
+    <!-- =============================== 出国回国准备 ================================ -->
     <a href="huiguo.htm">SK-出国回国准备（2022.8.26版本2.2）有时间就更新</a>
     <br>
-    <!--汇率货币计算=======================-->
+
+    <!-- =============================== 汇率转换窗口 ================================ -->
     <table>
         <tr>
             <td>
                 <div class="huobi">
-                    <!--Currency Converter widget by FreeCurrencyRates.com -->
-                    <div id='gcw_mainFqxA4IkoX' class='gcw_mainFqxA4IkoX'></div>
-                    <a id='gcw_siteFqxA4IkoX' href='https://freecurrencyrates.com/zh-hans/'>FreeCurrencyRates.com</a>
-                    <script>function reloadFqxA4IkoX() { var sc = document.getElementById('scFqxA4IkoX'); if (sc) sc.parentNode.removeChild(sc); sc = document.createElement('script'); sc.type = 'text/javascript'; sc.charset = 'UTF-8'; sc.async = true; sc.id = 'scFqxA4IkoX'; sc.src = 'https://freecurrencyrates.com/zh-hans/widget-vertical?iso=EUR-USD-CNY-CNH-GBP-JPY-CAD-HKD-TWD-XUL&df=2&p=FqxA4IkoX&v=fits&source=fcr&width=245&width_title=0&firstrowvalue=1&thm=eeeeee,ffffff,E3A1A1,CC0000,FFFFFF,eeeeee,ffffff,CC0000,000000&title=%E8%B4%A7%E5%B8%81%E6%8D%A2%E7%AE%97%E5%99%A8&tzo=-120'; var div = document.getElementById('gcw_mainFqxA4IkoX'); div.parentNode.insertBefore(sc, div); } reloadFqxA4IkoX(); </script>
-                    <!-- put custom styles here: .gcw_mainFqxA4IkoX{}, .gcw_headerFqxA4IkoX{}, .gcw_ratesFqxA4IkoX{}, .gcw_sourceFqxA4IkoX{} -->
-                    <!--End of Currency Converter widget by FreeCurrencyRates.com -->
+                    <!-- 第三方货币转换插件，保留原代码，不进行修改 -->
+                    <div id="gcw_mainFqxA4IkoX" class="gcw_mainFqxA4IkoX"></div>
+                    <a id="gcw_siteFqxA4IkoX" href="https://freecurrencyrates.com/zh-hans/">FreeCurrencyRates.com</a>
+                    <script>
+                        function reloadFqxA4IkoX(){
+                            var sc = document.getElementById("scFqxA4IkoX");
+                            if(sc) sc.parentNode.removeChild(sc);
+                            sc=document.createElement("script");
+                            sc.type="text/javascript";
+                            sc.charset="UTF-8";
+                            sc.async=true;
+                            sc.id="scFqxA4IkoX";
+                            sc.src= "https://freecurrencyrates.com/zh-hans/widget-vertical?iso=EUR-USD-CNY-CNH-GBP-JPY-CAD-HKD-TWD-XUL&df=2&p=FqxA4IkoX&v=fits&source=fcr&width=245&width_title=0&firstrowvalue=1&thm=eeeeee,ffffff,E3A1A1,CC0000,FFFFFF,eeeeee,ffffff,CC0000,000000&title=%E8%B4%A7%E5%B8%81%E6%8D%A2%E7%AE%97%E5%99%A8&tzo=-120";
+                            var div= document.getElementById("gcw_mainFqxA4IkoX");
+                            div.parentNode.insertBefore(sc,div);
+                        }
+                        reloadFqxA4IkoX();
+                    </script>
                 </div>
             </td>
         </tr>
     </table>
-
     <br>
-
     <hr>
-    <div>❤️‍🔥友情链接：
 
-        <a href="https://gastroworld.sk/">東方國際</a>→<a href="https://gastroworld.sk/kontakt/">地址</a>
+    <!-- =============================== 友情链接 ================================ -->
+    <div>
+        ❤️‍🔥友情链接：
+        <a href="https://gastroworld.sk/">東方國際</a>
+        →
+        <a href="https://gastroworld.sk/kontakt/">地址</a>
     </div>
     <br>
     <br>
-    本项目开源代码--<a href="https://github.com/JohnnyOKOK/johnnyokok.github.io">Github.com/JohnnyOKOK/johnnyokok.github.io</a>
-</body>
 
+    <!-- =============================== 开源地址 ================================ -->
+    本项目开源代码--
+    <a href="https://github.com/JohnnyOKOK/johnnyokok.github.io">Github.com/JohnnyOKOK/johnnyokok.github.io</a>
+
+    <!-- =============================== JavaScript功能区域 ================================ -->
+    <script>
+        /* 点击/悬停式下拉菜单逻辑。功能：手机端点击切换展开/收起，电脑端靠 CSS 悬浮控制 */
+        function toggleDropdown(button){
+            /* 使用 matchMedia 检测当前设备是否为粗糙指针（即触摸屏，如手机/平板） */
+            const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
+            
+            /* 只有检测到是触摸屏设备，才利用 JS 去切换 show 类 */
+            if (isTouchDevice) {
+                let menu = button.nextElementSibling;
+                menu.classList.toggle("show");
+            }
+        }
+
+        /* 更改整个页面背景颜色 */
+        function changeBgColor(color){
+            document.body.style.backgroundColor = color;
+        }
+
+        /* 复制文本功能。用现代Clipboard API替代原来的document.execCommand() */
+        function copyText(id){
+            /* 根据ID获取输入框 */
+            let text = document.getElementById(id).value;
+            /* 写入剪贴板 */
+            navigator.clipboard.writeText(text);
+            /* 提示复制成功 */
+            alert("复制成功");
+        }
+    </script>
+</body>
 </html>

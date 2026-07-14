@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <base target="_blank">
+    <title>洛卡导航</title>
+    <meta name="author" content="JohnnyOK">
+    <meta name="description" content="只是想做一个适合自己的导航网页">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <link rel="shortcut icon" href="img/favicon.ico">
+    <!-- <link rel="stylesheet" type="text/css" href="style/main.css"> -->
+    <style>
+        a {
+            display: inline-block;
+            text-decoration: none;
+            color: #0000e4;
+            margin: 4px 4px;
+            padding: 4px;
+            /* border: 1px dotted rgb(142, 142, 142); */
+            border-radius: 10%;
+        }
+
+        * {
+            font-weight: bold;
+        }
+
+        th {
+            width: 100px;
+            text-align: left;
+        }
+
+        td {
+            border-top: #e2e2e2 solid 2px;
+            text-align: center;
+        }
+
+        #htmlcode1 {
+            opacity: 0;
+            width: 1px;
+            height: 1px;
+        }
+
+        .xunlei {
+            display: inline-block;
+        }
+
+        summary:hover,
+        a:hover {
+            background-color: #0000e4;
+            color: #fff;
+        }
+
+        sup {
+            font-size: medium;
+            font-style: italic;
+        }
+
+        .sousuo {
+            display: inline-block;
+            margin: 10px 0px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>洛卡楽器店 の 導航<sup>-⏩极速版v1.01-2025--<a href="0.html">回旧版</a><a href="wxp/index.html">五线谱</a></sup></h1>
+    <!-- 加日期时间 -->
+    <div class="world">
+        <details title="点它会显示斯洛伐克与加拿大时间">
+            <summary>
+                <span id="aa">loading</span>
+                <script>
+                    setInterval("aa.innerHTML=new Date().toLocaleString()+' 周'+'日一二三四五六'.charAt(new Date().getDay());", 1000);
+                </script>
+                <u><strong>world时间</strong></u>
+                <strong><a href="https://www.baidu.com/s?wd=%E6%97%A5%E5%8E%86">日历</a></strong>
+            </summary>
+            <div>
+                <br>
+                <a href="https://24timezones.com/zh_time/slovakia_bratislava_clock.php" style="text-decoration: none"
+                    class="clock24"
+                    id="tz24-1650904477-cc15202-eyJob3VydHlwZSI6IjI0Iiwic2hvd2RhdGUiOiIxIiwic2hvd3NlY29uZHMiOiIxIiwic2hvd3RpbWV6b25lIjoiMCIsInR5cGUiOiJkIiwibGFuZyI6InpoIn0="
+                    title="布拉迪斯拉发 实际时间" target="_blank" rel="nofollow">sk时间</a>
+                <script type="text/javascript" src="https://w.24timezones.com/l.js" async></script>
+            </div>
+            <div>
+                <a href="//24timezones.com/%E5%8C%97%E4%BA%AC/%E6%97%B6%E9%97%B4" style="text-decoration: none"
+                    class="clock24"
+                    id="tz24-1661370745-c133-eyJob3VydHlwZSI6IjI0Iiwic2hvd2RhdGUiOiIxIiwic2hvd3NlY29uZHMiOiIxIiwic2hvd3RpbWV6b25lIjoiMCIsInR5cGUiOiJkIiwibGFuZyI6InpoIn0="
+                    title="时间 北京" target="_blank" rel="nofollow">cn时间</a>
+                <script type="text/javascript" src="//w.24timezones.com/l.js" async></script>
+            </div>
+        </details>
+    </div>
+    <a href="https://drive.google.com/drive/folders/1dx4NcRGceidUULgYlpM0yRQKFQ1a1NRN?usp=sharing">SK语-音频</a>
+    <a href="skA1/index.html">SK语-点读笔记</a>
+    <a href="huiguo.htm">SK-出国回国准备（2022.8.26版本2.2）</a>
+    <br>
+    <!--百度=======================-->
+    <form class="sousuo" action="https://www.baidu.com/s"><a href="https://www.baidu.com">🟢百度</a>
+        <input name="wd" type="text" placeholder="空搜 可直接进主页"><button type="submit">🔍</button>
+    </form>
+
+    <!--Google=======================-->
+    <form class="sousuo" action="https://www.google.com/search"><a href="https://www.google.com">🎯谷歌</a>
+        <input name="q" type="text"><button type="submit">🔍</button>
+    </form>
+    <br>
+    <!--Bing=======================-->
+    <form class="sousuo" action="https://cn.bing.com/search"><a href="https://www.bing.com">🔶必应</a>
+        <input name="q" type="text"><button type="submit">🔍</button>
+    </form>
+
+    <!--B站=======================-->
+    <form class="sousuo" action="https://search.bilibili.com/all"><a href="https://www.bilibili.com">🔵B站</a>
+        <input name="keyword" type="text"><button type="submit">🔍</button>
+    </form>
+    <br>
+    <!--Youtube=======================-->
+    <form class="sousuo" action="https://www.youtube.com/results"><a href="https://www.youtube.com">🟥YTB</a>
+        <input name="search_query" type="text"><button type="submit">🔍</button>
+    </form>
+    <br>
+    <!--导航按钮=======================-->
+
+
+
+    <table>
+        <tr>
+            <th>🏡常用主页</th>
+            <td><a title="斯洛伐克日历" href="https://calendar.zoznam.sk/">sk日历</a>
+                <a title="公农历" href="https://www.baidu.com/s?wd=%E6%97%A5%E5%8E%86">cn日历</a>
+                <a title="汇率换算" href="https://m.baidu.com/s?word=%E6%B1%87%E7%8E%87">
+                    汇率
+                </a>
+                <a title="闲鱼官网" href="https://www.goofish.com/">
+                    闲鱼
+                </a>
+                <a title="ChatGPT" href="https://chatgpt.com/">
+                    GPT
+                </a>
+                <a title="BT磁力链搜索下载" href="https://tellme.pw/btsow">
+                    磁力链搜索
+                </a>
+                <a title="国内测网速" href="https://www.speedtest.cn/">
+                    国内测速
+                </a>
+                <a title="国内测网速2" href="https://ipw.cn/">
+                    IPv6检测
+                </a>
+                <a title="国际测网速" href="https://www.speedtest.net">
+                    国际测速
+                </a>
+                <a title="IP地址查询" href="https://tool.lu/ip">
+                    IP地址
+                </a>
+                <a title="在线转换N多格式" href="https://convertio.co/zh/">
+                    在线转格式
+                </a>
+            </td>
+        </tr>
+
+        <tr>
+            <th>🌈Cela</th>
+            <td><a href="https://www.pinterest.com/">
+                    Pinterest
+                </a>
+                <a href="https://www.apple.com.cn/icloud/">
+                    icloud-cn
+                </a>
+                <a href="https://space.bilibili.com/28983221/">
+                    雪拉同B站
+                </a>
+                <a href="https://imslp.org/">
+                    国际乐谱
+                </a>
+                <a href="https://www.lizhiweike.com/">
+                    荔枝微
+                </a>
+                <a href="https://www.X.com/">
+                    X
+                </a>
+                <a href="https://www.instagram.com/">
+                    ins
+                </a>
+
+            </td>
+        </tr>
+        <tr>
+            <th>📬邮箱</th>
+            <td><a href="https://outlook.live.com/mail">
+                    微软Mail
+                </a>
+                <a href="https://mail.163.com/">
+                    网易Mail
+                </a>
+                <a href="https://mail.google.com/">
+                    谷歌Mail
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <th>🔠翻译</th>
+            <td>
+                <a title="国外谷歌翻译" href="https://translate.google.com">
+                    谷译
+                </a>
+                <a title="微软翻译" href="https://www.bing.com/translator">
+                    Bing译
+                </a>
+                <a title="百度翻译" href="https://fanyi.baidu.com">
+                    度译
+                </a>
+                <a title="简繁互译" href="https://www.bing.com/translator?ref=TThis&text=&from=zh-Hans&to=zh-Hant">
+                    简繁
+                </a>
+
+            </td>
+        </tr>
+        <tr>
+            <th>🌐科技公司</th>
+            <td> <a title="微软官网" href="https://www.microsoft.com/">
+                    Microsoft
+                </a>
+                <a title="英特尔官网" href="https://www.intel.com/">
+                    Intel
+                </a>
+                <a title="三星各国官网" href="https://www.samsung.com/cn/function/ipredirection/ipredirectionLocalList/">三星
+                </a>
+                <a title="苹果官网" href="https://www.apple.com/">
+                    Apple
+                </a>
+                <a title="AMD Yes!" href="https://www.amd.com/">
+                    AMD
+                </a>
+                <a title="英伟达官网" href="https://www.nvidia.cn/">
+                    Nvidia
+                </a>
+                <a title="谷歌商店" href="https://store.google.com/">
+                    谷歌商店
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <th>🌐科技公司</th>
+            <td> <a title="罗兰主站" href="https://www.roland.com/">
+                    Roland
+                </a>
+                <a title="罗兰中国" href="https://www.roland-china.com/">
+                    -CN
+                </a>
+                <a title="BOSS" href="https://www.boss.info/">Boss
+                </a>
+                <a title="BOSS中国" href="https://boss.roland-china.com/">
+                    -CN
+                </a>
+                <a title="雅马哈日本" href="https://jp.yamaha.com/">
+                    Yamaha-jp
+                </a>
+                <a title="雅马哈中国" href="https://www.yamaha.com.cn/">
+                    -CN
+                </a>
+                <a title="NUX" href="https://cn.nuxaudio.com/">
+                    NUX
+                </a>
+                <a title="JOYO" href="https://www.joyochina.cn/">
+                    JOYO
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <th>📷识图搜索</th>
+            <td><a title="百度图片出处搜索" href="https://graph.baidu.com/pcpage/index?tpl_from=pc">
+                    百度识图
+                </a>
+                <a title="谷歌图片出处搜索" href="https://www.google.com/imghp?hl=zh-CN&amp;ogbl">
+                    谷歌识图
+                </a>
+                <a title="微软图片出处搜索" href="https://cn.bing.com/visualsearch">
+                    微软识图
+                </a>
+                <a title="强大的图片出处搜索" href="https://tineye.com/">
+                    Tineye
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <th>🎮游戏</th>
+            <td><a title="红警二三下载" href="http://www.uc129.com/">
+                    红警
+                </a>
+                <a title="在线游戏机1" href="https://www.yikm.net/">
+                    小霸王1
+                </a>
+                <a title="在线游戏机2" href="https://www.return8090.com/">
+                    小霸王2
+                </a>
+                <a title="FC智力游戏下载神站" href="http://dyzg.ysepan.com/">
+                    FC下载
+                </a>
+
+            </td>
+        </tr>
+        <tr>
+            <th>🔻其它</th>
+            <td> <a title="谷歌浏览器App商店" href="https://chrome.google.com/webstore/category/extensions?hl=zh">
+                    Chrome商店
+                </a>
+                <a title="强大的驱动下载站" href="https://www.station-drivers.com/">
+                    驱动下载
+                </a>
+                <a title="谷歌官方安卓App商店" href="https://play.google.com">
+                    Google Play
+                </a>
+                <a title="微软系统与应用原文件下载" href="https://msdn.itellyou.cn/">
+                    MSDN原版下载
+                </a>
+                <a title="从谷歌商店直接下载安卓应用安装包" href="https://apkpure.com/cn/">
+                    安卓apk下载
+                </a>
+                <a title="收费软件的替代方案查询" href="https://alternativeto.net/">
+                    替代
+                </a>
+                <a title="一些工具" href="http://tools.liumingye.cn/">
+                    工具箱
+                </a>
+                <a title="原‘驱动之家’" href="https://www.mydrivers.com/">
+                    快科技
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <th>🔻其它</th>
+            <td> <a title="LOS刷机" href="https://lineageos.org/">
+                    LineageOS
+                </a>
+                <a title="crDroid刷机" href="https://sourceforge.net/projects/crdroid/">
+                    crDroid
+                </a>
+                <a title="Carbon刷机" href="https://carbonrom.org/">
+                    Carbon
+                </a>
+
+            </td>
+        </tr>
+
+        <tr>
+            <th>💿看电影</th>
+            <td> <a title="泥巴影院" href="https://www.nbyy.cc">
+                    泥巴1
+                </a>
+                       <a title="泥巴影院" href="https://www.nivod.cc/">
+                    泥巴2
+                </a>
+                <a title="多瑙影视" href="https://www.duonaovod.com/">
+                    多瑙
+                </a>
+                <a title="唐人街影院" href="https://www.trjvod.com">
+                    唐人街
+                </a>
+                <a title="优视频" href="https://www.uvod.tv/">
+                    优视频
+                </a>
+                <a title="欧乐影院" href="https://www.olevod.com/">
+                    欧乐
+                </a>
+                <a title="爱壹帆" href="https://www.iyf.tv/">
+                    爱壹帆
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <th>❤️装机必备</th>
+            <td><a title="全网最绿色的解压缩工具" href="https://www.7-zip.org/">7z</a>
+                <a title="全网听、下歌神器" href="https://github.com/lyswhut/lx-music-desktop/">
+                    洛雪音乐
+                </a>
+                <a title="洛雪音乐下载发布站点与密码" href="https://www.lanzoui.com/b0bf2cfa/">
+                    密码glqw
+                </a>
+                <a title="全网听歌神器" href="https://listen1.github.io/listen1/">
+                    Listen1听音乐
+                </a>
+                <a title="微软office安装神器" href="https://otp.landian.vip/zh-cn/">
+                    Office安装
+                </a>
+                <a title="买家与卖家" href="https://wangwang.taobao.com/">
+                    阿里旺旺/千牛
+                </a>
+                <a title="我也不想用它但没办法" href="https://www.xunlei.com/">
+                    迅雷下载
+                </a>
+                <a title="你懂的" href="https://github.com/massgravel/Microsoft-Activation-Scripts/releases/tag/1.5">
+                    win/office激活
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <th>🔧工具收录</th>
+            <td><a title="在线PS" href="https://ps.gaoding.com/">
+                    在线PhotoShop
+                </a>
+                <a title="备用" href="https://www.aconvert.com/cn/">
+                    在线转格式-备用
+                </a>
+                <a title="洛雪音乐下载发布站点与密码" href="https://cse.google.com/cse?cx=006422944775554126616:gbrsbrjbfug">
+                    驴搜
+                </a>
+                <a title="动漫图片搜索动漫出处" href="https://trace.moe/">
+                    漫图搜
+                </a>
+                <a title="最全CPU排行" href="https://www.cpubenchmark.net/high_end_cpus.html">
+                    CPU排行
+                </a>
+                <a title="最全GPU排行" href="https://www.videocardbenchmark.net/high_end_gpus.html">
+                    GPU排行
+                </a>
+                <a title="屏幕比例计算器" href="https://www.lddgo.net/math/proportional-calculator">
+                    屏幕比例计算器
+                </a>
+            </td>
+        </tr>
+
+    </table>
+
+
+
+
+    <!--下拉=======================-->
+
+    <!--其它=======================-->
+    <br>
+
+    <details>
+        <summary class="xiala1">🔧装机必备</summary>
+
+        <li><a href="https://t1.daumcdn.net/potplayer/PotPlayer/Version/Latest/PotPlayerSetup64.exe">-
+                PotPlayer</a><sub>--复制链接后迅雷下载</sub>
+            <form class="xunlei" role="form" action="" method="post">
+                <input type="text" id="htmlcode1"
+                    value='https://t1.daumcdn.net/potplayer/PotPlayer/Version/Latest/PotPlayerSetup64.exe'>
+                <input name="button" type="button" onclick="htmlcode1.select();document.execCommand(&quot;Copy&quot;)"
+                    value="复制">
+            </form>
+        </li>
+
+        <li><a href="http://get.daum.net/PotPlayer/Codec/OpenCodecSetup64.exe">-
+                PotPlayer额外编码器</a><sub>--复制链接后迅雷下载</sub>
+            <form class="xunlei" role="form" action="" method="post">
+                <input type="text" id="htmlcode1" value='http://get.daum.net/PotPlayer/Codec/OpenCodecSetup64.exe'>
+                <input name="button" type="button" onclick="htmlcode1.select();document.execCommand(&quot;Copy&quot;)"
+                    value="复制">
+            </form>
+        </li>
+        <li><a title="你懂的" href="https://github.com/massgravel/Microsoft-Activation-Scripts/releases/tag/1.5">-
+                win、office激活</a></li>
+    </details>
+
+    <details>
+        <summary class="xiala1">🔧其他备忘</summary>
+        <li><a href="app/clash2.5.12.apk">① Clash</a> &
+            <a
+                href="https://microsoftedge.microsoft.com/addons/detail/%E8%B0%B7%E6%AD%8C%E4%B8%8A%E7%BD%91%E5%8A%A9%E6%89%8B-vip%E7%89%88/eoboojokdmamahfilfmamjjkcmkmddgk?hl=zh-CN">②
+                Ghelp-EDGE</a>
+        </li>
+        <details>
+            <summary class="xiala1">个人备忘</summary>
+
+            <table>
+                <tr>
+                    <th>🔠翻译</th>
+                    <td> <a title="国内谷歌翻译" href="https://translate.google.com.hk/?sl=auto&tl=zh-CN&op=translate">
+                            谷译cn
+                        </a>
+                        <a title="国外谷歌翻译" href="https://translate.google.com">
+                            谷译int
+                        </a>
+                        <a title="微软翻译" href="https://www.bing.com/translator">
+                            Bing译
+                        </a>
+                        <a title="百度翻译" href="https://fanyi.baidu.com">
+                            度译
+                        </a>
+                        <a title="简繁互译" href="https://translate.google.com.hk/?sl=zh-CN&tl=zh-TW&op=translate">
+                            简繁
+                        </a>
+
+                    </td>
+                </tr>
+    <br>
+    <!--百度=======================-->
+    <form class="sousuo" action="https://shasha.hair/node/search?title="><a href="https://shasha.hair">🟢傻傻</a>
+        <input name="title" type="text" placeholder="空搜 可直接进主页"><button type="submit">🔍</button>
+    </form>
+    <form class="sousuo" action="https://www.duonaovod.com/index.php/vod/search.html?"><a href="https://www.duonaovod.com">🟢多瑙</a>
+        <input name="wd" type="text" placeholder=""><button type="submit">🔍</button>
+    </form>
+    <br>
+    <!--百度=======================-->
+    <form class="sousuo" action="https://www.trjvod.com/index.php/vod/search.html?"><a href="https://www.trjvod.com">🟢唐人</a>
+        <input name="wd" type="text" placeholder=""><button type="submit">🔍</button>
+    </form>
+                <tr>
+                    <td><a title="吞食天地2隐藏物品" href="https://www.9game.cn/news/5725716.html">
+                            吞2隐
+                        </a>
+                        <a title="美服魔兽" href="https://worldofwarcraft.com/en-us/">
+                            魔兽us
+                        </a>
+                        <a title="美服暴雪" href="https://www.blizzard.com/en-us">
+                            暴雪us
+                        </a>
+                        <a title="台服魔兽" href="https://worldofwarcraft.com/zh-tw/">
+                            魔兽tw
+                        </a>
+                        <a title="台服暴雪" href="https://www.blizzard.com/zh-tw">
+                            暴雪tw
+                        </a>
+                        <a title="国服暴雪" href="https://cn.blizzard.com/">
+                            暴雪cn
+                        </a>
+                        </a>
+                        <a title="文件管理器" href="https://johnnyokok.github.io/app/wjglq.apk">
+                            安卓文件管理器
+                        </a>
+                    </td>
+                </tr>
+            </table>
+            <li><a href="http://192.168.1.1/">吉比特光猫h2-2</a></li>
+            超级管理员：
+            <form role="form" action="" method="post">
+                <input type="text" id="htmlcode" value='CMCCAdmin'>
+                <input name="button" type="button" onclick="htmlcode.select();document.execCommand(&quot;Copy&quot;)"
+                    value="复制">
+            </form>
+
+            <form role="form" action="" method="post">
+                <input type="text" id="htmlcode" value='aDm8H%MdA'>
+                <input name="button" type="button" onclick="htmlcode.select();document.execCommand(&quot;Copy&quot;)"
+                    value="复制">
+            </form>
+            一般管理员：
+            <form role="form" action="" method="post">
+                <input type="text" id="htmlcode" value='user'>
+                <input name="button" type="button" onclick="htmlcode.select();document.execCommand(&quot;Copy&quot;)"
+                    value="复制">
+            </form>
+
+            <form role="form" action="" method="post">
+                <input type="text" id="htmlcode" value='nsvw659s'>
+                <input name="button" type="button" onclick="htmlcode.select();document.execCommand(&quot;Copy&quot;)"
+                    value="复制">
+            </form>
+        </details>
+
+    </details>
+    <a href="huiguo.htm">SK-出国回国准备（2022.8.26版本2.2）有时间就更新</a>
+    <br>
+    <!--汇率货币计算=======================-->
+    <table>
+        <tr>
+            <td>
+                <div class="huobi">
+                    <!--Currency Converter widget by FreeCurrencyRates.com -->
+                    <div id='gcw_mainFqxA4IkoX' class='gcw_mainFqxA4IkoX'></div>
+                    <a id='gcw_siteFqxA4IkoX' href='https://freecurrencyrates.com/zh-hans/'>FreeCurrencyRates.com</a>
+                    <script>function reloadFqxA4IkoX() { var sc = document.getElementById('scFqxA4IkoX'); if (sc) sc.parentNode.removeChild(sc); sc = document.createElement('script'); sc.type = 'text/javascript'; sc.charset = 'UTF-8'; sc.async = true; sc.id = 'scFqxA4IkoX'; sc.src = 'https://freecurrencyrates.com/zh-hans/widget-vertical?iso=EUR-USD-CNY-CNH-GBP-JPY-CAD-HKD-TWD-XUL&df=2&p=FqxA4IkoX&v=fits&source=fcr&width=245&width_title=0&firstrowvalue=1&thm=eeeeee,ffffff,E3A1A1,CC0000,FFFFFF,eeeeee,ffffff,CC0000,000000&title=%E8%B4%A7%E5%B8%81%E6%8D%A2%E7%AE%97%E5%99%A8&tzo=-120'; var div = document.getElementById('gcw_mainFqxA4IkoX'); div.parentNode.insertBefore(sc, div); } reloadFqxA4IkoX(); </script>
+                    <!-- put custom styles here: .gcw_mainFqxA4IkoX{}, .gcw_headerFqxA4IkoX{}, .gcw_ratesFqxA4IkoX{}, .gcw_sourceFqxA4IkoX{} -->
+                    <!--End of Currency Converter widget by FreeCurrencyRates.com -->
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <br>
+
+    <hr>
+    <div>❤️‍🔥友情链接：
+
+        <a href="https://gastroworld.sk/">東方國際</a>→<a href="https://gastroworld.sk/kontakt/">地址</a>
+    </div>
+    <br>
+    <br>
+    本项目开源代码--<a href="https://github.com/JohnnyOKOK/johnnyokok.github.io">Github.com/JohnnyOKOK/johnnyokok.github.io</a>
+</body>
+
+</html>
