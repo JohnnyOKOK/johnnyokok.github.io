@@ -1,0 +1,115 @@
+body {
+    background-color: #9b9b9b;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    text-shadow: #000000 1px 1px 4px, #000000 0px 0px 1px;
+}
+
+body,
+a {
+    color: rgb(243, 241, 241);
+}
+
+/* *{
+border: #000000 solid 1px;
+} */
+.xiala1 {
+    width: 300px;
+    margin: 4px 0px;
+}
+
+button {
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 15%;
+    font-size: large;
+}
+
+form img {
+    width: 80px;
+    vertical-align: text-bottom;
+}
+
+summary img {
+    width: 20px;
+    vertical-align: text-bottom;
+}
+
+.world {
+    font-size: small;
+}
+
+a {
+    text-decoration: none;
+}
+
+li {
+    list-style: none;
+}
+
+.w1 {
+    display: inline-block;
+    min-width: 6%;
+    vertical-align: top;
+}
+
+.w1 a {
+    display: block;
+    margin: 4px 0px;
+    height: 38px;
+    text-align: center;
+    line-height: 38px;
+    padding: 0 4px 0 4px;
+
+
+}
+
+.w1 a,
+.xiala2 {
+    background-color: #c1c1c154;
+    box-shadow: #00000096 2px 2px 3px 0px;
+    border-radius: 3%;
+    border-top: 1px #ffffffd3 solid;
+    border-left: 1px #ffffffd3 solid;
+    text-shadow: rgb(255, 255, 255) 0px 0px 2px, #000000 0px 0px 2px;
+    ;
+    color: rgb(255, 255, 255);
+}
+
+sub {
+    font-style: italic;
+    color: rgba(224, 224, 224, 0.629)
+}
+
+summary:hover,
+a:hover {
+    background-color: #81818154;
+    box-shadow: #00000096 2px 2px 3px 2px;
+    text-shadow: rgb(255, 255, 255) 0px 0px 1px, 0px 0px 3px, 0px 0px 5px, 0px 0px 20px;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    /* -webkit-transition: background-color .2s ease-in; */
+    /* -moz-transition: background-color .2s ease-in; */
+    /* transition:background-color .5s ease-in; */
+    transition: text-shadow .5s ease-in;
+}
+
+h1:hover {
+    text-shadow: rgb(255, 255, 255) 0px 0px 1px, 0px 0px 3px, 0px 0px 5px, 0px 0px 20px, #000000 1px 1px 4px, #000000 0px 0px 1px;
+    transition: text-shadow .5s ease-in;
+}
+
+#htmlcode1,
+.xunlei {
+    width: 1px;
+    height: 1px;
+    display: inline;
+}
+
+.huobi {
+    box-shadow: #00000096 2px 2px 3px 0px;
+    width: 230px;
+    height: 313px;
+    color: rgb(99, 52, 52) improtant;
+
+}
