@@ -23,47 +23,64 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end; /* 让内容整体靠下偏向布局 */
+            justify-content: flex-end; /* 主体内容整体靠下靠后，留出上方空间 */
             padding: 4vh 6vw;
             position: relative;
         }
 
-        /* ------------------ 左上角日期农历容器 ------------------ */
-        .top-row-wrapper {
+        /* ------------------ 左上角信息总容器 ------------------ */
+        .top-left-content {
             position: absolute;
             top: 4vh;
             left: 6vw;
-            width: 60%; 
-            container-type: inline-size;
-            z-index: 5;
-        }
-
-        .top-row {
+            right: 6vw; /* 限制右边界，防止在大屏下无限延伸 */
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            width: 100%;
+            gap: 16px;
+            z-index: 5;
+            container-type: inline-size;
         }
 
-        .date-info {
-            font-size: clamp(2.8rem, 17cqw, 5.6rem); 
-            font-weight: bold;
-            white-space: nowrap;
+        /* 日期、农历、干支地支合并为同一行 */
+        .date-lunar-row {
+            display: flex;
+            flex-direction: row;
+            align-items: baseline;
+            flex-wrap: wrap; /* 允许小屏幕下超长自动温柔折行 */
+            gap: 16px;
+            width: 100%;
             line-height: 1.1;
         }
 
-        .lunar-info {
-            font-size: clamp(1.9rem, 10.4cqw, 3.2rem);
-            line-height: 1.4;
+        .date-info {
+            font-size: clamp(2.4rem, 8cqw, 4.8rem); 
+            font-weight: bold;
             white-space: nowrap;
-            opacity: 0.85; 
         }
 
-        /* ------------------ 右上角手动刷新按钮 ------------------ */
+        .lunar-info {
+            font-size: clamp(1.6rem, 5cqw, 2.6rem);
+            font-weight: normal;
+            opacity: 0.85; 
+            white-space: nowrap;
+        }
+
+        /* ------------------ 天气组件容器（放开限宽） ------------------ */
+        .weather-wrapper {
+            width: 100%;
+            height: 150px;
+            overflow: hidden;
+        }
+        .weather-wrapper iframe {
+            border: none;
+            display: block;
+        }
+
+        /* ------------------ 左下角手动刷新按钮 ------------------ */
         .btn-refresh-svg {
             position: absolute;
-            right: 6vw;
-            top: 4vh;
+            left: 6vw;
+            bottom: 4vh;
             width: 100px;
             height: 36px;
             cursor: pointer;
@@ -82,7 +99,7 @@
             align-items: center;
             justify-content: center;
             container-type: inline-size;
-            margin-bottom: 180px; /* 给底部左下角的天气组件留出空位，防止重叠 */
+            margin-bottom: 8vh; /* 撑开与底部刷新按钮的安全距离 */
         }
 
         .time-container {
@@ -103,36 +120,17 @@
         }
 
         .time-num {
-            font-size: clamp(7.0rem, 50cqw, 22rem); 
+            font-size: clamp(6.0rem, 45cqw, 20rem); 
             font-weight: 700;
             font-variant-numeric: tabular-nums;
             letter-spacing: -4px;
         }
 
         .time-label {
-            font-size: clamp(1.8rem, 10cqw, 3.6rem); 
-            margin-left: 12px;
-            margin-right: 12px;
+            font-size: clamp(1.6rem, 8cqw, 3.2rem); 
+            margin-left: 10px;
+            margin-right: 10px;
             font-weight: bold;
-        }
-
-        /* ------------------ 左下角天气组件容器 ------------------ */
-        .weather-wrapper {
-            position: absolute;
-            bottom: 3vh;
-            left: 6vw;
-            width: 88vw;          
-            height: 150px;
-            overflow: hidden;     
-            z-index: 8;
-        }
-
-        /* 针对手机等小屏幕的自适应缩放 */
-        @media (max-width: 850px) {
-            .weather-wrapper iframe {
-                transform: scale(calc(88vw / 800)); 
-                transform-origin: left bottom;      
-            }
         }
 
         /* ------------------ 防烧屏双色线 ------------------ */
@@ -177,18 +175,16 @@
                 padding: 6vh 6vw;
             }
             
-            .top-row-wrapper { 
-                position: absolute;
+            .top-left-content { 
                 top: 6vh;
                 left: 6vw;
-                width: 40%; 
+                width: 50%;
             }
             
             .time-box-wrapper {
                 width: 100%;
                 justify-content: flex-end;
-                margin-bottom: 0; 
-                padding-bottom: 4vh;
+                margin-bottom: 4vh; /* 横屏时右移，防止与左下角刷新重叠 */
             }
 
             .time-container { 
@@ -198,31 +194,19 @@
             }
             
             .date-info {
-                font-size: clamp(2.8rem, 16cqw, 5.2rem); 
+                font-size: clamp(2.4rem, 8cqw, 4.2rem); 
             }
             .lunar-info {
-                font-size: clamp(1.9rem, 9.5cqw, 3.0rem); 
+                font-size: clamp(1.6rem, 4cqw, 2.2rem); 
             }
             .time-num { 
-                font-size: clamp(7.0rem, 24cqw, 19rem); 
+                font-size: clamp(6.0rem, 22cqw, 17rem); 
             }
             .time-label {
-                font-size: clamp(1.8rem, 5cqi, 3.2rem);
-            }
-
-            .weather-wrapper {
-                bottom: 4vh;
-                left: 6vw;
-                width: 45vw; 
-            }
-            @media (max-width: 1600px) {
-                .weather-wrapper iframe {
-                    transform: scale(calc(45vw / 800));
-                    transform-origin: left bottom;
-                }
+                font-size: clamp(1.6rem, 4cqi, 2.8rem);
             }
             
-            .btn-refresh-svg { top: 6vh; bottom: auto; right: 6vw; }
+            .btn-refresh-svg { bottom: 6vh; left: 6vw; }
         }
     </style>
 </head>
@@ -231,15 +215,19 @@
     <!-- 防烧屏双色线 -->
     <div id="burn-line" class="anti-burn-line"></div>
 
-    <!-- 左上角日期农历自适应盒 -->
-    <div class="top-row-wrapper">
-        <div class="top-row">
-            <div id="date-display" class="date-info">--月-- 周几</div>
-            <div id="lunar-display" class="lunar-info">农历计算中...</div>
+    <!-- 左上角总容器（含同行日期农历、下方天气） -->
+    <div class="top-left-content">
+        <div class="date-lunar-row">
+            <span id="date-display" class="date-info">--月-- 周几</span>
+            <span id="lunar-display" class="lunar-info">农历计算中...</span>
+        </div>
+        <!-- 天气挂在日期正下方 -->
+        <div class="weather-wrapper">
+            <iframe width="800" height="150" src="https://i.tianqi.com/?c=code&id=48&color=%23ffffff&icon=3&num=6&site=12&lang=cn" frameborder="0"></iframe>
         </div>
     </div>
 
-    <!-- 右上角手动刷新按钮 -->
+    <!-- 左下角手动刷新按钮 -->
     <svg class="btn-refresh-svg" onclick="refreshAll()" viewBox="0 0 100 36">
         <rect x="1" y="1" width="98" height="34" rx="17" ry="17" fill="none" stroke="#ffffff" stroke-width="2" />
         <text x="50" y="22" font-size="12" font-weight="bold" font-family="sans-serif" fill="#ffffff" text-anchor="middle">手动刷新</text>
@@ -263,11 +251,6 @@
         </div>
     </div>
 
-    <!-- 左下角天气组件（已更新为你通过 F12 获取的最优白色样式 URL） -->
-    <div class="weather-wrapper">
-        <iframe width="800" height="150" src="https://i.tianqi.com/?c=code&id=48&color=%23ffffff&icon=3&num=6&site=12&lang=cn" frameborder="0"></iframe>
-    </div>
-
     <script>
         // 1. 24小时制时钟核心
         function updateClock() {
@@ -286,20 +269,21 @@
             const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
             const dayOfWeek = weekDays[now.getDay()];
             
-            document.getElementById('date-display').textContent = `${month}月${date} ${dayOfWeek}`;
+            document.getElementById('date-display').textContent = `${month}月${date}日 ${dayOfWeek}`;
             
             if (document.getElementById('lunar-display').textContent.includes("计算中") || (hours === "00" && minutes === "00" && seconds === "00")) {
                 updateLunar();
             }
         }
 
-        // 2. 精准农历生成
+        // 2. 精准农历与干支地支生成（精简合并为单行显示）
         function updateLunar() {
             try {
                 if (typeof Lunar !== 'undefined') {
                     const d = Lunar.fromDate(new Date());
-                    const formatResult = `农历 ${d.getMonthInChinese()}月${d.getDayInChinese()}<br>${d.getYearInGanZhi()} [${d.getYearShengXiao()}] 年 ${d.getMonthInGanZhi()}月 ${d.getDayInGanZhi()}日`;
-                    document.getElementById('lunar-display').innerHTML = formatResult;
+                    // 将所有农历、地支、生肖信息压缩输出在一行内
+                    const formatResult = `农历 ${d.getMonthInChinese()}月${d.getDayInChinese()} · ${d.getYearInGanZhi()}[${d.getYearShengXiao()}]年 · ${d.getMonthInGanZhi()}月 ${d.getDayInGanZhi()}日`;
+                    document.getElementById('lunar-display').textContent = formatResult;
                 } else {
                     document.getElementById('lunar-display').textContent = "正在获取农历...";
                 }
