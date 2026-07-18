@@ -23,45 +23,66 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: flex-end; /* 让内容整体靠下偏向布局 */
             padding: 4vh 6vw;
             position: relative;
         }
 
-        /* ------------------ 左侧/顶部日期防挤压容器 ------------------ */
+        /* ------------------ 左上角日期农历容器 ------------------ */
         .top-row-wrapper {
-            width: 100%;
+            position: absolute;
+            top: 4vh;
+            left: 6vw;
+            width: 60%; 
             container-type: inline-size;
+            z-index: 5;
         }
 
         .top-row {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 12px;
             width: 100%;
         }
 
         .date-info {
-            font-size: clamp(1.4rem, 8.5cqw, 2.8rem); 
+            font-size: clamp(2.8rem, 17cqw, 5.6rem); 
             font-weight: bold;
             white-space: nowrap;
+            line-height: 1.1;
         }
 
         .lunar-info {
-            font-size: clamp(0.95rem, 5.2cqw, 1.6rem);
-            line-height: 1.5;
+            font-size: clamp(1.9rem, 10.4cqw, 3.2rem);
+            line-height: 1.4;
             white-space: nowrap;
-            opacity: 0.85; /* 让农历稍微柔和一点，分清主次 */
+            opacity: 0.85; 
         }
 
-        /* ------------------ 右侧/主时间防挤压容器 ------------------ */
+        /* ------------------ 右上角手动刷新按钮 ------------------ */
+        .btn-refresh-svg {
+            position: absolute;
+            right: 6vw;
+            top: 4vh;
+            width: 100px;
+            height: 36px;
+            cursor: pointer;
+            z-index: 10;
+            transition: transform 0.1s ease;
+        }
+        
+        .btn-refresh-svg:active { 
+            transform: scale(1.08); 
+        }
+
+        /* ------------------ 主时间防挤压容器 ------------------ */
         .time-box-wrapper {
-            flex: 1;
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             container-type: inline-size;
+            margin-bottom: 180px; /* 给底部左下角的天气组件留出空位，防止重叠 */
         }
 
         .time-container {
@@ -78,44 +99,47 @@
             display: flex;
             align-items: baseline;
             justify-content: center;
-            line-height: 0.9;
+            line-height: 0.85;
         }
 
         .time-num {
-            font-size: clamp(3.5rem, 25cqw, 11rem); 
+            font-size: clamp(7.0rem, 50cqw, 22rem); 
             font-weight: 700;
             font-variant-numeric: tabular-nums;
-            letter-spacing: -2px;
+            letter-spacing: -4px;
         }
 
         .time-label {
-            font-size: clamp(0.9rem, 5cqw, 1.8rem); 
-            margin-left: 6px;
-            margin-right: 6px;
+            font-size: clamp(1.8rem, 10cqw, 3.6rem); 
+            margin-left: 12px;
+            margin-right: 12px;
             font-weight: bold;
         }
 
-        /* 手动刷新按钮：同步为纯白简约风格 */
-        .btn-refresh-svg {
+        /* ------------------ 左下角天气组件容器 ------------------ */
+        .weather-wrapper {
             position: absolute;
-            right: 6vw;
-            top: 4.5vh;
-            width: 100px;
-            height: 36px;
-            cursor: pointer;
-            z-index: 10;
-            transition: transform 0.1s ease;
-        }
-        
-        .btn-refresh-svg:active { 
-            transform: scale(1.08); 
+            bottom: 3vh;
+            left: 6vw;
+            width: 88vw;          
+            height: 150px;
+            overflow: hidden;     
+            z-index: 8;
         }
 
-        /* 防烧屏纯白线条动画（依然保留，用于保护屏幕） */
+        /* 针对手机等小屏幕的自适应缩放 */
+        @media (max-width: 850px) {
+            .weather-wrapper iframe {
+                transform: scale(calc(88vw / 800)); 
+                transform-origin: left bottom;      
+            }
+        }
+
+        /* ------------------ 防烧屏双色线 ------------------ */
         .anti-burn-line {
             position: absolute;
             top: 0;
-            left: -10px;
+            left: -30px; 
             width: 6px;
             height: 100%;
             background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.95), rgba(255,255,255,0));
@@ -124,8 +148,19 @@
             pointer-events: none;
         }
 
+        .anti-burn-line::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -9px; 
+            width: 6px;
+            height: 100%;
+            background: #000000;
+            box-shadow: 0 0 8px #000000; 
+        }
+
         @keyframes sweep {
-            0% { left: -20px; }
+            0% { left: -30px; }
             100% { left: 105vw; }
         }
 
@@ -137,16 +172,23 @@
         @media (orientation: landscape) {
             body {
                 flex-direction: row;
-                align-items: center;
-                padding: 0 6vw;
+                align-items: flex-end; 
+                justify-content: space-between;
+                padding: 6vh 6vw;
             }
             
             .top-row-wrapper { 
-                width: 32%; 
+                position: absolute;
+                top: 6vh;
+                left: 6vw;
+                width: 40%; 
             }
             
             .time-box-wrapper {
-                width: 68%;
+                width: 100%;
+                justify-content: flex-end;
+                margin-bottom: 0; 
+                padding-bottom: 4vh;
             }
 
             .time-container { 
@@ -155,41 +197,55 @@
                 gap: 0;
             }
             
-            .time-unit {
-                align-items: baseline;
-            }
-            
             .date-info {
-                font-size: clamp(1.4rem, 11cqw, 2.6rem); 
+                font-size: clamp(2.8rem, 16cqw, 5.2rem); 
             }
             .lunar-info {
-                font-size: clamp(0.95rem, 6.5cqw, 1.5rem); 
+                font-size: clamp(1.9rem, 9.5cqw, 3.0rem); 
             }
             .time-num { 
-                font-size: clamp(3.5rem, 13cqw, 9.5rem); 
+                font-size: clamp(7.0rem, 24cqw, 19rem); 
             }
             .time-label {
-                font-size: clamp(0.9rem, 3cqi, 1.6rem);
+                font-size: clamp(1.8rem, 5cqi, 3.2rem);
+            }
+
+            .weather-wrapper {
+                bottom: 4vh;
+                left: 6vw;
+                width: 45vw; 
+            }
+            @media (max-width: 1600px) {
+                .weather-wrapper iframe {
+                    transform: scale(calc(45vw / 800));
+                    transform-origin: left bottom;
+                }
             }
             
-            .btn-refresh-svg { top: auto; bottom: 5vh; right: 6vw; }
+            .btn-refresh-svg { top: 6vh; bottom: auto; right: 6vw; }
         }
     </style>
 </head>
 <body>
 
-    <!-- 防烧屏白线 -->
+    <!-- 防烧屏双色线 -->
     <div id="burn-line" class="anti-burn-line"></div>
 
-    <!-- 顶部/左侧信息自适应盒 -->
+    <!-- 左上角日期农历自适应盒 -->
     <div class="top-row-wrapper">
         <div class="top-row">
-            <div id="date-display" class="date-info">--月--日 周几</div>
+            <div id="date-display" class="date-info">--月-- 周几</div>
             <div id="lunar-display" class="lunar-info">农历计算中...</div>
         </div>
     </div>
 
-    <!-- 主时间高自适应盒 -->
+    <!-- 右上角手动刷新按钮 -->
+    <svg class="btn-refresh-svg" onclick="refreshAll()" viewBox="0 0 100 36">
+        <rect x="1" y="1" width="98" height="34" rx="17" ry="17" fill="none" stroke="#ffffff" stroke-width="2" />
+        <text x="50" y="22" font-size="12" font-weight="bold" font-family="sans-serif" fill="#ffffff" text-anchor="middle">手动刷新</text>
+    </svg>
+
+    <!-- 主时间自适应盒 -->
     <div class="time-box-wrapper">
         <div class="time-container">
             <div class="time-unit">
@@ -207,11 +263,10 @@
         </div>
     </div>
 
-    <!-- 手动刷新按钮：纯白边框与纯白文字 -->
-    <svg class="btn-refresh-svg" onclick="refreshAll()" viewBox="0 0 100 36">
-        <rect x="1" y="1" width="98" height="34" rx="17" ry="17" fill="none" stroke="#ffffff" stroke-width="2" />
-        <text x="50" y="22" font-size="12" font-weight="bold" font-family="sans-serif" fill="#ffffff" text-anchor="middle">手动刷新</text>
-    </svg>
+    <!-- 左下角天气组件（已更新为你通过 F12 获取的最优白色样式 URL） -->
+    <div class="weather-wrapper">
+        <iframe width="800" height="150" src="https://i.tianqi.com/?c=code&id=48&color=%23ffffff&icon=3&num=6&site=12&lang=cn" frameborder="0"></iframe>
+    </div>
 
     <script>
         // 1. 24小时制时钟核心
@@ -230,7 +285,8 @@
             const date = now.getDate();
             const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
             const dayOfWeek = weekDays[now.getDay()];
-            document.getElementById('date-display').textContent = `${month}月${date}日 ${dayOfWeek}`;
+            
+            document.getElementById('date-display').textContent = `${month}月${date} ${dayOfWeek}`;
             
             if (document.getElementById('lunar-display').textContent.includes("计算中") || (hours === "00" && minutes === "00" && seconds === "00")) {
                 updateLunar();
@@ -245,7 +301,6 @@
                     const formatResult = `农历 ${d.getMonthInChinese()}月${d.getDayInChinese()}<br>${d.getYearInGanZhi()} [${d.getYearShengXiao()}] 年 ${d.getMonthInGanZhi()}月 ${d.getDayInGanZhi()}日`;
                     document.getElementById('lunar-display').innerHTML = formatResult;
                 } else {
-                    // 如果外部库未加载完成，先用公历兜底显示，不卡死脚本
                     document.getElementById('lunar-display').textContent = "正在获取农历...";
                 }
             } catch(e) {
@@ -253,7 +308,7 @@
             }
         }
 
-        // 3. 10秒一次的防烧屏白线
+        // 3. 10秒一次的防烧屏线条
         const burnLine = document.getElementById('burn-line');
         setInterval(() => {
             burnLine.classList.remove('trigger-sweep');
