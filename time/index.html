@@ -1,1 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>极简流光时钟台历</title>
+    <!-- 引入开源精准农历库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lunar-javascript/1.6.12/lunar.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
 
+        body {
+            background-color: #000000;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 4vh 6vw;
+            position: relative;
+        }
+
+        /* 全局通用：全文字动态彩虹渐变流光动画 */
+        .color-stream-text {
+            background: linear-gradient(
+                45deg, 
+                #ff4500, #ffaa00, #45f3ff, #00ff88, #0044ff, #9b51e0, #ff007f, #ff4500
+            );
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textRainbow 16s ease infinite;
+        }
+
+        @keyframes textRainbow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ------------------ 左侧/顶部日期防挤压容器 ------------------ */
+        .top-row-wrapper {
+            width: 100%;
+            container-type: inline-size; /* 核心：开启左侧日期的容器查询 */
+        }
+
+        .top-row {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+        }
+
+        /* 字号改用 cqw，紧跟容器宽度等比缩放，打死不换行 */
+        .date-info {
+            font-size: clamp(1.4rem, 8.5cqw, 2.8rem); 
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .lunar-info {
+            font-size: clamp(0.95rem, 5.2cqw, 1.6rem);
+            line-height: 1.5;
+            filter: brightness(1.1); 
+            white-space: nowrap;
+        }
+
+        /* ------------------ 右侧/主时间防挤压容器 ------------------ */
+        .time-box-wrapper {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            container-type: inline-size; /* 核心：开启时间容器查询 */
+        }
+
+        .time-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1vh;
+            width: 100%;
+            white-space: nowrap; 
+        }
+
+        .time-unit {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            line-height: 0.9;
+        }
+
+        .time-num {
+            font-size: clamp(3.5rem, 25cqw, 11rem); 
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -2px;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.05)); 
+        }
+
+        .time-label {
+            font-size: clamp(0.9rem, 5cqw, 1.8rem); 
+            margin-left: 6px;
+            margin-right: 6px;
+            font-weight: bold;
+        }
+
+        /* 手动刷新按钮 */
+        .btn-refresh-svg {
+            position: absolute;
+            right: 6vw;
+            top: 4.5vh;
+            width: 100px;
+            height: 36px;
+            cursor: pointer;
+            z-index: 10;
+            transition: transform 0.1s ease;
+        }
+        
+        .btn-refresh-svg:active { 
+            transform: scale(1.08); 
+        }
+
+        /* 防烧屏纯白线条动画 */
+        .anti-burn-line {
+            position: absolute;
+            top: 0;
+            left: -10px;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.95), rgba(255,255,255,0));
+            box-shadow: 0 0 15px #ffffff;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        @keyframes sweep {
+            0% { left: -20px; }
+            100% { left: 105vw; }
+        }
+
+        .trigger-sweep {
+            animation: sweep 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        /* ================= 横屏下的比例精细适配 ================= */
+        @media (orientation: landscape) {
+            body {
+                flex-direction: row;
+                align-items: center;
+                padding: 0 6vw;
+            }
+            
+            /* 横屏时，分配给日期的盒子占 32% 宽度 */
+            .top-row-wrapper { 
+                width: 32%; 
+            }
+            
+            /* 横屏时，分配给时间的盒子占 68% 宽度 */
+            .time-box-wrapper {
+                width: 68%;
+            }
+
+            /* 横屏时间恢复水平一排 */
+            .time-container { 
+                flex-direction: row; 
+                justify-content: flex-end;
+                gap: 0;
+            }
+            .time-unit {
+                align-items: baseline;
+            }
+            
+            /* 横屏下，调整各自的 cqw 缩放系数，让文字看起来更饱满 */
+            .date-info {
+                font-size: clamp(1.4rem, 11cqw, 2.6rem); 
+            }
+            .lunar-info {
+                font-size: clamp(0.95rem, 6.5cqw, 1.5rem); 
+            }
+            .time-num { 
+                font-size: clamp(3.5rem, 13cqw, 9.5rem); 
+            }
+            .time-label {
+                font-size: clamp(0.9rem, 3cqi, 1.6rem);
+            }
+            
+            .btn-refresh-svg { top: auto; bottom: 5vh; right: 6vw; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 防烧屏白线 -->
+    <div id="burn-line" class="anti-burn-line"></div>
+
+    <!-- 顶部/左侧信息自适应盒 -->
+    <div class="top-row-wrapper">
+        <div class="top-row color-stream-text">
+            <div id="date-display" class="date-info">--月--日 周几</div>
+            <div id="lunar-display" class="lunar-info">农历计算中...</div>
+        </div>
+    </div>
+
+    <!-- 主时间高自适应盒 -->
+    <div class="time-box-wrapper">
+        <div class="time-container color-stream-text">
+            <div class="time-unit">
+                <span id="hour-num" class="time-num">00</span>
+                <span class="time-label">时</span>
+            </div>
+            <div class="time-unit">
+                <span id="min-num" class="time-num">00</span>
+                <span class="time-label">分</span>
+            </div>
+            <div class="time-unit">
+                <span id="sec-num" class="time-num">00</span>
+                <span class="time-label">秒</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 手动刷新按钮 -->
+    <svg class="btn-refresh-svg" onclick="refreshAll()" viewBox="0 0 100 36">
+        <defs>
+            <linearGradient id="svgGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ff4500" />
+                <stop offset="20%" stop-color="#ffaa00" />
+                <stop offset="40%" stop-color="#45f3ff" />
+                <stop offset="60%" stop-color="#00ff88" />
+                <stop offset="80%" stop-color="#9b51e0" />
+                <stop offset="100%" stop-color="#ff007f" />
+                
+                <animate attributeName="x1" values="0%;100%;100%;0%;0%" dur="16s" repeatCount="indefinite" />
+                <animate attributeName="y1" values="0%;0%;100%;100%;0%" dur="16s" repeatCount="indefinite" />
+                <animate attributeName="x2" values="100%;0%;0%;100%;100%" dur="16s" repeatCount="indefinite" />
+                <animate attributeName="y2" values="100%;100%;0%;0%;100%" dur="16s" repeatCount="indefinite" />
+            </linearGradient>
+        </defs>
+        <rect x="1" y="1" width="98" height="34" rx="17" ry="17" fill="none" stroke="url(#svgGlow)" stroke-width="2" />
+        <text x="50" y="22" font-size="12" font-weight="bold" font-family="sans-serif" fill="url(#svgGlow)" text-anchor="middle">手动刷新</text>
+    </svg>
+
+    <script>
+        // 1. 24小时制时钟核心
+        function updateClock() {
+            const now = new Date();
+            
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            document.getElementById('hour-num').textContent = hours;
+            document.getElementById('min-num').textContent = minutes;
+            document.getElementById('sec-num').textContent = seconds;
+
+            const month = now.getMonth() + 1;
+            const date = now.getDate();
+            const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+            const dayOfWeek = weekDays[now.getDay()];
+            document.getElementById('date-display').textContent = `${month}月${date}日 ${dayOfWeek}`;
+            
+            if (document.getElementById('lunar-display').textContent.includes("计算中") || (hours === "00" && minutes === "00" && seconds === "00")) {
+                updateLunar();
+            }
+        }
+
+        // 2. 精准农历生成
+        function updateLunar() {
+            try {
+                const d = Lunar.fromDate(new Date());
+                const formatResult = `农历 ${d.getMonthInChinese()}月${d.getDayInChinese()}<br>${d.getYearInGanZhi()} [${d.getYearShengXiao()}] 年 ${d.getMonthInGanZhi()}月 ${d.getDayInGanZhi()}日`;
+                document.getElementById('lunar-display').innerHTML = formatResult;
+            } catch(e) {
+                document.getElementById('lunar-display').textContent = "农历加载失败";
+            }
+        }
+
+        // 3. 10秒一次的防烧屏白线
+        const burnLine = document.getElementById('burn-line');
+        setInterval(() => {
+            burnLine.classList.remove('trigger-sweep');
+            void burnLine.offsetWidth; 
+            burnLine.classList.add('trigger-sweep');
+        }, 10000); 
+
+        // 4. 自动/手动刷新
+        function refreshAll() {
+            window.location.reload();
+        }
+
+        setInterval(refreshAll, 3600000);
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>
