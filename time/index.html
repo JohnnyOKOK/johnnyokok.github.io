@@ -2,312 +2,138 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>极简黑白时钟台历</title>
-    <!-- 引入开源精准农历库 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lunar-javascript/1.6.12/lunar.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手机日历</title>
     <style>
-        * {
-            box-sizing: border-box;
+        /* 全黑背景，基础文字浅灰色 #cccccc，已去掉 text-shadow */
+        html, body {
             margin: 0;
             padding: 0;
-            user-select: none;
-        }
-
-        body {
-            background-color: #000000; /* 极致纯黑 */
-            color: #ffffff;           /* 极致纯白 */
+            background-color: #000000;
+            color: #cccccc;
+            overflow: hidden;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            overflow: hidden;
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end; /* 主体内容整体靠下靠后，留出上方空间 */
-            padding: 4vh 6vw;
-            position: relative;
         }
 
-        /* ------------------ 左上角信息总容器 ------------------ */
-        .top-left-content {
-            position: absolute;
-            top: 4vh;
-            left: 6vw;
-            right: 6vw; /* 限制右边界，防止在大屏下无限延伸 */
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            z-index: 5;
-            container-type: inline-size;
-        }
-
-        /* 日期、农历、干支地支合并为同一行 */
-        .date-lunar-row {
-            display: flex;
-            flex-direction: row;
-            align-items: baseline;
-            flex-wrap: wrap; /* 允许小屏幕下超长自动温柔折行 */
-            gap: 16px;
-            width: 100%;
-            line-height: 1.1;
-        }
-
-        .date-info {
-            font-size: clamp(2.4rem, 8cqw, 4.8rem); 
-            font-weight: bold;
-            white-space: nowrap;
-        }
-
-        .lunar-info {
-            font-size: clamp(1.6rem, 5cqw, 2.6rem);
-            font-weight: normal;
-            opacity: 0.85; 
-            white-space: nowrap;
-        }
-
-        /* ------------------ 天气组件容器（放开限宽） ------------------ */
-        .weather-wrapper {
-            width: 100%;
-            height: 150px;
-            overflow: hidden;
-        }
-        .weather-wrapper iframe {
-            border: none;
-            display: block;
-        }
-
-        /* ------------------ 左下角手动刷新按钮 ------------------ */
-        .btn-refresh-svg {
-            position: absolute;
-            left: 6vw;
-            bottom: 4vh;
-            width: 100px;
-            height: 36px;
-            cursor: pointer;
-            z-index: 10;
-            transition: transform 0.1s ease;
-        }
-        
-        .btn-refresh-svg:active { 
-            transform: scale(1.08); 
-        }
-
-        /* ------------------ 主时间防挤压容器 ------------------ */
-        .time-box-wrapper {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            container-type: inline-size;
-            margin-bottom: 8vh; /* 撑开与底部刷新按钮的安全距离 */
-        }
-
-        .time-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 1vh;
-            width: 100%;
-            white-space: nowrap; 
-        }
-
-        .time-unit {
-            display: flex;
-            align-items: baseline;
-            justify-content: center;
-            line-height: 0.85;
-        }
-
-        .time-num {
-            font-size: clamp(6.0rem, 45cqw, 20rem); 
-            font-weight: 700;
-            font-variant-numeric: tabular-nums;
-            letter-spacing: -4px;
-        }
-
-        .time-label {
-            font-size: clamp(1.6rem, 8cqw, 3.2rem); 
-            margin-left: 10px;
-            margin-right: 10px;
-            font-weight: bold;
-        }
-
-        /* ------------------ 防烧屏双色线 ------------------ */
-        .anti-burn-line {
-            position: absolute;
+        /* 防烧屏：每10秒黑白竖线扫屏2秒 */
+        body::before, body::after {
+            content: "";
+            position: fixed;
             top: 0;
-            left: -30px; 
-            width: 6px;
+            width: 4px;
             height: 100%;
-            background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.95), rgba(255,255,255,0));
-            box-shadow: 0 0 15px #ffffff;
             z-index: 9999;
             pointer-events: none;
+            opacity: 0;
+            animation: sweepLines 10s linear infinite;
+        }
+        body::before {
+            background: #ffffff; /* 刷屏白线保持亮度以达到通刷像素效果 */
+            left: -10px;
+        }
+        body::after {
+            background: #222222; /* 灰黑线紧跟其后 */
+            left: -20px;
+            animation-delay: 0.1s;
         }
 
-        .anti-burn-line::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -9px; 
-            width: 6px;
-            height: 100%;
-            background: #000000;
-            box-shadow: 0 0 8px #000000; 
-        }
-
-        @keyframes sweep {
-            0% { left: -30px; }
-            100% { left: 105vw; }
-        }
-
-        .trigger-sweep {
-            animation: sweep 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
-        /* ================= 横屏下的比例精细适配 ================= */
-        @media (orientation: landscape) {
-            body {
-                flex-direction: row;
-                align-items: flex-end; 
-                justify-content: space-between;
-                padding: 6vh 6vw;
-            }
-            
-            .top-left-content { 
-                top: 6vh;
-                left: 6vw;
-                width: 50%;
-            }
-            
-            .time-box-wrapper {
-                width: 100%;
-                justify-content: flex-end;
-                margin-bottom: 4vh; /* 横屏时右移，防止与左下角刷新重叠 */
-            }
-
-            .time-container { 
-                flex-direction: row; 
-                justify-content: flex-end;
-                gap: 0;
-            }
-            
-            .date-info {
-                font-size: clamp(2.4rem, 8cqw, 4.2rem); 
-            }
-            .lunar-info {
-                font-size: clamp(1.6rem, 4cqw, 2.2rem); 
-            }
-            .time-num { 
-                font-size: clamp(6.0rem, 22cqw, 17rem); 
-            }
-            .time-label {
-                font-size: clamp(1.6rem, 4cqi, 2.8rem);
-            }
-            
-            .btn-refresh-svg { bottom: 6vh; left: 6vw; }
+        @keyframes sweepLines {
+            0%, 80% { left: -50px; opacity: 0; }      /* 前8秒：隐形埋伏在左侧外 */
+            81% { opacity: 0.8; }                     /* 第8.1秒：开始刷屏，线变亮 */
+            99% { left: 105%; opacity: 0.8; }         /* 到第10秒：横扫到屏幕右侧外 */
+            100% { left: 105%; opacity: 0; }
         }
     </style>
 </head>
 <body>
 
-    <!-- 防烧屏双色线 -->
-    <div id="burn-line" class="anti-burn-line"></div>
+    <!-- 第1行：公历与农历干支 -->
+    <div id="calendar-header">加载中...</div>
 
-    <!-- 左上角总容器（含同行日期农历、下方天气） -->
-    <div class="top-left-content">
-        <div class="date-lunar-row">
-            <span id="date-display" class="date-info">--月-- 周几</span>
-            <span id="lunar-display" class="lunar-info">农历计算中...</span>
+    <!-- 第2行：天气与时间并排 -->
+    <div>
+        <!-- 天气区域 -->
+        <div style="display: inline-block; vertical-align: middle;">
+            <iframe scrolling="no" width="90" height="80" src="https://i.tianqi.com/?c=code&a=getcode&id=85&icon=1" frameborder="0"></iframe>
         </div>
-        <!-- 天气挂在日期正下方 -->
-        <div class="weather-wrapper">
-            <iframe width="800" height="150" src="https://i.tianqi.com/?c=code&id=48&color=%23ffffff&icon=3&num=6&site=12&lang=cn" frameborder="0"></iframe>
-        </div>
+        
+        <!-- 时间区域：时、分数字也同步为温和的浅灰色 #cccccc -->
+        <span id="live-time" style="display: inline-block; vertical-align: middle; margin-left: 2vw; font-size: 11vw;">
+            <b id="t-hour" style="color: #cccccc;">00</b><span style="font-size: 0.25em; font-weight: normal;">时</span><b id="t-minute" style="color: #cccccc;">00</b><span style="font-size: 0.25em; font-weight: normal;">分</span><span id="t-second" style="font-size: 0.8em; color: #888888;">00</span><span style="font-size: 0.25em; font-weight: normal;">秒</span>
+        </span>
     </div>
 
-    <!-- 左下角手动刷新按钮 -->
-    <svg class="btn-refresh-svg" onclick="refreshAll()" viewBox="0 0 100 36">
-        <rect x="1" y="1" width="98" height="34" rx="17" ry="17" fill="none" stroke="#ffffff" stroke-width="2" />
-        <text x="50" y="22" font-size="12" font-weight="bold" font-family="sans-serif" fill="#ffffff" text-anchor="middle">手动刷新</text>
-    </svg>
-
-    <!-- 主时间自适应盒 -->
-    <div class="time-box-wrapper">
-        <div class="time-container">
-            <div class="time-unit">
-                <span id="hour-num" class="time-num">00</span>
-                <span class="time-label">时</span>
-            </div>
-            <div class="time-unit">
-                <span id="min-num" class="time-num">00</span>
-                <span class="time-label">分</span>
-            </div>
-            <div class="time-unit">
-                <span id="sec-num" class="time-num">00</span>
-                <span class="time-label">秒</span>
-            </div>
-        </div>
+    <!-- 第3行：宜忌 -->
+    <div>
+        <span style="color: #52c41a; font-weight: bold;">宜：</span><span id="yi-text" style="color: #52c41a;">加载中...</span>
     </div>
+    <div>
+        <span style="color: #ff4d4f; font-weight: bold;">忌：</span><span id="ji-text" style="color: #ff4d4f;">加载中...</span>
+    </div>
+
+    <!-- 引入本地农历计算库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lunar-javascript/1.6.12/lunar.js"></script>
 
     <script>
-        // 1. 24小时制时钟核心
-        function updateClock() {
+        function updateCalendar() {
             const now = new Date();
-            
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            
-            document.getElementById('hour-num').textContent = hours;
-            document.getElementById('min-num').textContent = minutes;
-            document.getElementById('sec-num').textContent = seconds;
 
+            // 1. 获取公历数据并定制样式
             const month = now.getMonth() + 1;
             const date = now.getDate();
-            const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
-            const dayOfWeek = weekDays[now.getDay()];
-            
-            document.getElementById('date-display').textContent = `${month}月${date}日 ${dayOfWeek}`;
-            
-            if (document.getElementById('lunar-display').textContent.includes("计算中") || (hours === "00" && minutes === "00" && seconds === "00")) {
-                updateLunar();
-            }
-        }
+            const dayOfWeekChar = ["日", "一", "二", "三", "四", "五", "六"][now.getDay()];
 
-        // 2. 精准农历与干支地支生成（精简合并为单行显示）
-        function updateLunar() {
+            // 样式定制：字号加大的同时，基础文字均继承 body 的 #cccccc 浅灰色
+            const monthHtml = `<span style="font-size: 2.5em; font-weight: bold;">${month}</span>月`;
+            const dateHtml = `<b style="font-size: 3.0em; color: #ff9900;">${date}</b>日`;
+            const weekHtml = `<span style="font-size: 2.5em; margin-left: 12px; font-weight: bold;">周<span style="color: #1890ff;">${dayOfWeekChar}</span></span>`;
+            
+            // 拼接公历 HTML
+            const solarHtml = `${monthHtml}${dateHtml}${weekHtml}`;
+
+            // 2. 获取农历与宜忌数据
+            let lunarText = "";
             try {
-                if (typeof Lunar !== 'undefined') {
-                    const d = Lunar.fromDate(new Date());
-                    // 将所有农历、地支、生肖信息压缩输出在一行内
-                    const formatResult = `农历 ${d.getMonthInChinese()}月${d.getDayInChinese()} · ${d.getYearInGanZhi()}[${d.getYearShengXiao()}]年 · ${d.getMonthInGanZhi()}月 ${d.getDayInGanZhi()}日`;
-                    document.getElementById('lunar-display').textContent = formatResult;
-                } else {
-                    document.getElementById('lunar-display').textContent = "正在获取农历...";
-                }
-            } catch(e) {
-                document.getElementById('lunar-display').textContent = "农历暂不可用";
+                const d = Lunar.fromDate(now);
+                
+                const lunarMonth = d.getMonthInChinese();
+                const lunarDay = d.getDayInChinese();
+                const yearGanZhi = d.getYearInGanZhiByLiChun();
+                const yearShengXiao = d.getYearShengXiaoByLiChun();
+                const monthGanZhi = d.getMonthInGanZhi();
+                const dayGanZhi = d.getDayInGanZhi();
+                
+                // 农历文本部分前置一个带稍微暗淡一点灰色的样式（#aaaaaa），让第一行的公历和农历更有层次感
+                lunarText = `<span style="color: #aaaaaa;"> 农历 ${lunarMonth}月${lunarDay} · ${yearGanZhi}[${yearShengXiao}]年 · ${monthGanZhi}月 ${dayGanZhi}日</span>`;
+
+                const yiList = d.getDayYi();
+                const jiList = d.getDayJi();
+                document.getElementById('yi-text').innerText = yiList.length > 0 ? yiList.join(' ') : '诸事不宜';
+                document.getElementById('ji-text').innerText = jiList.length > 0 ? jiList.join(' ') : '诸事不忌';
+
+            } catch (e) {
+                lunarText = `<span style="color: #888888;"> 农历加载失败</span>`;
+                document.getElementById('yi-text').innerText = "加载失败";
+                document.getElementById('ji-text').innerText = "加载失败";
             }
+
+            // 3. 组合第一行的 HTML 代码
+            document.getElementById('calendar-header').innerHTML = solarHtml + lunarText;
+
+            // 4. 处理时间精确填入各标签
+            document.getElementById('t-hour').innerText = String(now.getHours()).padStart(2, '0');
+            document.getElementById('t-minute').innerText = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('t-second').innerText = String(now.getSeconds()).padStart(2, '0');
         }
 
-        // 3. 10秒一次的防烧屏线条
-        const burnLine = document.getElementById('burn-line');
-        setInterval(() => {
-            burnLine.classList.remove('trigger-sweep');
-            void burnLine.offsetWidth; 
-            burnLine.classList.add('trigger-sweep');
-        }, 10000); 
+        // 初始化并启动每秒时间更新
+        updateCalendar();
+        setInterval(updateCalendar, 1000);
 
-        // 4. 自动/手动刷新
-        function refreshAll() {
+        // 每隔 1 小时自动强刷一次网页
+        setInterval(function() {
             window.location.reload();
-        }
-
-        setInterval(refreshAll, 3600000);
-        setInterval(updateClock, 1000);
-        updateClock();
+        }, 3600000);
     </script>
 </body>
 </html>
